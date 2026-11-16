@@ -66,6 +66,27 @@ out["qt_close"] = bb.buttons()[0].text()
 print(json.dumps(out, ensure_ascii=False))
 '''
 
+# install_qt_translator() as main.py calls it, with every Qt translations
+# directory replaced by an empty one (no qtbase_<lang>.qm).
+DIRECTION_PROBE = r'''
+import sys, tempfile
+from unittest import mock
+sys.path.insert(0, sys.argv[1])
+from PySide6.QtCore import QTranslator
+from PySide6.QtWidgets import QApplication
+from i18n import install_qt_translator
+from ui.notfound_manager import NotFoundManager
+
+app = QApplication([])
+with tempfile.TemporaryDirectory() as empty:
+    load = QTranslator.load
+    with mock.patch.object(QTranslator, "load",
+                           lambda self, locale, name, prefix, path: load(self, locale, name, prefix, empty)):
+        install_qt_translator(app)
+window = NotFoundManager()
+print(app.layoutDirection().name, window.isRightToLeft(), window.windowTitle())
+'''
+
 
 class I18nTest(unittest.TestCase):
     @classmethod
@@ -138,6 +159,18 @@ class I18nTest(unittest.TestCase):
             self.assertEqual(o["notfound_title"], "System Notice")
             self.assertEqual(o["qt_close"].replace("&", ""), "Close")
             self.assertEqual(self.usage(language), "Usage: flatpak-manager-gui <url/file>\n")
+
+    def direction(self, language):
+        r = subprocess.run([sys.executable, "-c", DIRECTION_PROBE, os.path.join(ROOT, "src")],
+                           env=self.env(language), capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        return r.stdout.strip().splitlines()[-1]
+
+    def test_right_to_left_catalog_mirrors_without_qtbase(self):
+        # The application's Arabic catalog is used: mirrored even without qtbase_ar.
+        self.assertTrue(self.direction("ar").startswith("RightToLeft True "))
+        # Urdu is right-to-left but has no application catalog: English, left to right.
+        self.assertTrue(self.direction("ur").startswith("LeftToRight False "))
 
 
 if __name__ == "__main__":

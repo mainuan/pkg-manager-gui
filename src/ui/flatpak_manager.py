@@ -1,12 +1,13 @@
 import os
 import re
+from i18n import _
 from service.flatpak_service import FlatpakService
 from ui.pkg_manager import PkgManager, PKGAction
 
 
 class FlatpakManager(PkgManager):
     def __init__(self, target_url: str, action: PKGAction | None = None):
-        super().__init__(title="Flatpak Manager", action=action)
+        super().__init__(title=_("Flatpak Manager"), action=action)
 
         self.service = FlatpakService(self.process)
         self.target_url = target_url

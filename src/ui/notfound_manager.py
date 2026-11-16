@@ -1,12 +1,13 @@
 from PySide6.QtWidgets import (QMainWindow, QVBoxLayout, QWidget,
                                QLabel, QPushButton)
 from PySide6.QtCore import Qt
+from i18n import _
 
 
 class NotFoundManager(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Aviso do Sistema")
+        self.setWindowTitle(_("System Notice"))
         self.setFixedSize(350, 280)
 
         self.setStyleSheet("""
@@ -33,14 +34,14 @@ class NotFoundManager(QMainWindow):
             "font-size: 60px; color: #ffcc00; margin-bottom: 10px;")
         layout.addWidget(lbl_icon)
 
-        lbl_title = QLabel("Formato não Suportado")
+        lbl_title = QLabel(_("Unsupported Format"))
         lbl_title.setAlignment(Qt.AlignCenter)
         lbl_title.setStyleSheet(
             "font-size: 18px; font-weight: bold; color: #222;")
         layout.addWidget(lbl_title)
 
         lbl_desc = QLabel(
-            "O tipo de formato de pacote detectado não é compatível com esta versão.")
+            _("The detected package format is not supported by this version."))
         lbl_desc.setAlignment(Qt.AlignCenter)
         lbl_desc.setWordWrap(True)
         lbl_desc.setStyleSheet(
@@ -49,7 +50,7 @@ class NotFoundManager(QMainWindow):
 
         layout.addStretch()
 
-        btn_close = QPushButton("Entendi, fechar")
+        btn_close = QPushButton(_("Got it, close"))
         btn_close.setCursor(Qt.PointingHandCursor)
         btn_close.clicked.connect(self.close)
         layout.addWidget(btn_close)

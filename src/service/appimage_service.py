@@ -3,6 +3,7 @@ import subprocess
 import re
 from pathlib import Path
 from service.pkg_service import PkgService
+from i18n import _
 from PySide6.QtCore import QProcess
 
 
@@ -18,7 +19,7 @@ class AppImageService(PkgService):
         cmd = [self.wrapper_path, "-i", str(file_path)]
 
         if not file_path.exists():
-            raise Exception(f"Arquivo {file_path} não encontrado")
+            raise Exception(_("File {path} not found").format(path=file_path))
 
         if self._is_su:
             self.process.start(cmd[0], cmd[1:])

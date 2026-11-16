@@ -1,5 +1,6 @@
 import os
 from service.pkg_service import PkgService
+from i18n import _
 from PySide6.QtCore import QProcess
 from utils.grp_utils import GroupUtils
 from utils.str_utils import StrUtils
@@ -18,7 +19,7 @@ class FlatpakService(PkgService):
         file_path = Path(url).resolve()
 
         if not file_path.exists():
-            raise Exception(f"Arquivo {file_path} não encontrado")
+            raise Exception(_("File {path} not found").format(path=file_path))
 
         cmd = ["flatpak", "install", str(
             file_path), "-y", "--no-static-deltas"]

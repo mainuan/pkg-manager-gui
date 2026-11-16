@@ -1,0 +1,177 @@
+# Dutch translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: nl <https://github.com/mainuan>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "Pakketten op het systeem beheren"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr ""
+"Het wachtwoord van de systeembeheerder is vereist om deze bewerking uit te "
+"voeren"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+# reviewed: consistency with other installers ("installatieprogramma")
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "Pakketinstallatieprogramma"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Flatpak- en AppImage-toepassingen beheren en installeren"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/bestand"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "Gebruik: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "Bestand {path} niet gevonden"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage-beheer"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak-beheer"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "Systeemmelding"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "Niet-ondersteund formaat"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr ""
+"Het gedetecteerde pakketformaat wordt door deze versie niet ondersteund."
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "Begrepen, sluiten"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>Status controleren...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "Huidige actie: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "Bewerking met succes voltooid!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "Succes"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "De bewerking is onderbroken of met fouten beëindigd."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>Installeren:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "Fout"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Installatie mislukt: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>Verwijderen:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "Verwijderen mislukt: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "Toepassing al geïnstalleerd"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "Het pakket '{name}' is al op het systeem geïnstalleerd."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "Wilt u het verwijderen?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "Deïnstalleren"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "Installatie bevestigen"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "Het pakket '{name}' is niet op het systeem geïnstalleerd."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "Wilt u het installeren?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "Installeren"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "Waarschuwing: de groep 'flatpak' is niet op het systeem gevonden."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "Er is een fout opgetreden bij het controleren van de groep: {error}"

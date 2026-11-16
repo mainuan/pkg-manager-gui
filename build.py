@@ -36,7 +36,8 @@ def posix_xml_lang(path: str):
     import re
     with open(path, encoding="utf-8") as fh:
         text = fh.read()
-    text = re.sub(r'xml:lang="([a-z]{2,3})-([A-Z]{2})"', r'xml:lang="\1_\2"', text)
+    # zh-Hans-CN / zh-Hant-TW (language-script-region) -> zh_CN / zh_TW
+    text = re.sub(r'xml:lang="([a-z]{2,3})-(?:[A-Z][a-z]{3}-)?([A-Z]{2})"', r'xml:lang="\1_\2"', text)
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(text)
 

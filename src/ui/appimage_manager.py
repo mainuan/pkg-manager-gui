@@ -1,11 +1,12 @@
 import os
 import re
+from i18n import _
 from service.appimage_service import AppImageService
 from ui.pkg_manager import PkgManager, PKGAction
 
 class AppImageManager(PkgManager):
     def __init__(self, target_url: str, action: PKGAction | None = None):
-        super().__init__(title="AppImage Manager", action=action)
+        super().__init__(title=_("AppImage Manager"), action=action)
 
         self.service = AppImageService(self.process)
         self.target_url = target_url

@@ -4,6 +4,7 @@ from PySide6.QtCore import QProcess, Qt
 from enum import Enum
 import sys
 from service.pkg_service import PkgService
+from i18n import _
 
 
 class PKGAction(Enum):
@@ -30,18 +31,20 @@ class PkgManager(QMainWindow):
         self.layout = QVBoxLayout(self.central_widget)
         self.layout.setContentsMargins(20, 20, 20, 20)
 
-        self.label = QLabel(f"<b>Verificando status...</b>")
+        self.label = QLabel(_("<b>Checking status...</b>"))
         self.label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.label)
 
         self.current_progress = QProgressBar()
-        self.current_progress.setFormat("Ação atual: %p%")
+        self.current_progress.setFormat(
+            # Translators: progress bar text; %p is replaced by Qt with the percentage.
+            _("Current action: %p%"))
         self.layout.addWidget(self.current_progress)
 
         if isinstance(other_progress_bar, QProgressBar):
             self.layout.addWidget(other_progress_bar)
 
-        self.btn_cancel = QPushButton("Cancelar")
+        self.btn_cancel = QPushButton(_("Cancel"))
         self.btn_cancel.clicked.connect(self.close)
         self.layout.addWidget(self.btn_cancel)
 
@@ -61,44 +64,48 @@ class PkgManager(QMainWindow):
     def on_finished(self, exit_code):
         if exit_code == 0:
             QMessageBox.information(
-                self, "Sucesso", "Operação concluída com êxito!")
+                self, _("Success"), _("Operation completed successfully!"))
         else:
             QMessageBox.warning(
-                self, "Aviso", "A operação foi encerrada ou apresentou erros.")
+                self, _("Warning"), _("The operation was interrupted or finished with errors."))
         self.close()
 
     def start_installation(self, target_name: str, target_ref: str):
         if self.pkg_action == PKGAction.AUTO and not self.msg_box_install(target_name):
             sys.exit(0)
 
-        self.label.setText(f"<b>Instalando:</b> {target_name} 😎")
+        self.label.setText(
+            _("<b>Installing:</b> {name}").format(name=target_name) + " 😎")
         try:
             self.service.install(target_ref)
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Falha na instalação: {e}")
+            QMessageBox.critical(self, _("Error"),
+                                 _("Installation failed: {error}").format(error=e))
             sys.exit(1)
 
     def start_removal(self, target_name: str, target_ref: str):
         if self.pkg_action == PKGAction.AUTO and not self.msg_box_remove(self.target_name):
             sys.exit(0)
 
-        self.label.setText(f"<b>Removendo:</b> {target_name} 😥")
+        self.label.setText(
+            _("<b>Removing:</b> {name}").format(name=target_name) + " 😥")
         try:
             self.service.uninstall(target_ref)
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Falha na remoção: {e}")
+            QMessageBox.critical(self, _("Error"),
+                                 _("Removal failed: {error}").format(error=e))
             sys.exit(1)
 
     def msg_box_remove(self, package_name: str):
         msg_box = QMessageBox(self)
         msg_box.setIcon(QMessageBox.Question)
-        msg_box.setWindowTitle("Aplicativo já instalado")
+        msg_box.setWindowTitle(_("Application Already Installed"))
         msg_box.setText(
-            f"O pacote '{package_name}' já está instalado no sistema.")
-        msg_box.setInformativeText("Deseja removê-lo?")
+            _("The package '{name}' is already installed on the system.").format(name=package_name))
+        msg_box.setInformativeText(_("Do you want to remove it?"))
         btn_sim = msg_box.addButton(
-            "Desinstalar", QMessageBox.YesRole)
-        btn_no = msg_box.addButton("Cancelar", QMessageBox.NoRole)
+            _("Uninstall"), QMessageBox.YesRole)
+        btn_no = msg_box.addButton(_("Cancel"), QMessageBox.NoRole)
         
         btn_no.setFocus()
         msg_box.exec()
@@ -108,13 +115,13 @@ class PkgManager(QMainWindow):
     def msg_box_install(self, package_name: str):
         msg_box = QMessageBox(self)
         msg_box.setIcon(QMessageBox.Question)
-        msg_box.setWindowTitle(f"Confirmação de instalação")
+        msg_box.setWindowTitle(_("Confirm Installation"))
         msg_box.setText(
-            f"O pacote '{package_name}' não está instalado no sistema.")
-        msg_box.setInformativeText("Deseja instala-lo?")
+            _("The package '{name}' is not installed on the system.").format(name=package_name))
+        msg_box.setInformativeText(_("Do you want to install it?"))
         btn_sim = msg_box.addButton(
-            "Instalar", QMessageBox.YesRole)
-        msg_box.addButton("Cancelar", QMessageBox.NoRole)
+            _("Install"), QMessageBox.YesRole)
+        msg_box.addButton(_("Cancel"), QMessageBox.NoRole)
         msg_box.exec()
 
         return msg_box.clickedButton() == btn_sim

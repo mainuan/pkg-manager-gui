@@ -1,0 +1,172 @@
+# Arabic translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: ar <https://github.com/mainuan>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "أدِر الحزم على النظام"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "كلمة سرّ المدير مطلوبة لإجراء هذه العملية"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "مدير الحزم PKG"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "مثبّت الحزم"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "أدِر تطبيقات Flatpak وAppImage وثبّتها"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "عنوان/ملف"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "الاستخدام: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "لم يُعثر على الملف {path}"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "مدير AppImage"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "مدير Flatpak"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "إشعار النظام"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "نسق غير مدعوم"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "نسق الحزمة المكتشف غير مدعوم في هذه الإصدارة."
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "فهمت، أغلق"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>يتحقّق من الحالة...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "الإجراء الحالي: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "ألغِ"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "اكتملت العملية بنجاح!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "نجح"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "قوطعت العملية أو انتهت بأخطاء."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "تحذير"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>يثبّت:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "خطأ"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "فشل التثبيت: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>يزيل:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "فشلت الإزالة: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "التطبيق مثبّت مسبقًا"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "الحزمة '{name}' مثبّتة مسبقًا على النظام."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "أتريد إزالتها؟"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "أزل التثبيت"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "أكّد التثبيت"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "الحزمة '{name}' غير مثبّتة على النظام."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "أتريد تثبيتها؟"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "ثبّت"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "تحذير: لم يُعثر على المجموعة 'flatpak' على النظام."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "حدث خطأ أثناء التحقّق من المجموعة: {error}"

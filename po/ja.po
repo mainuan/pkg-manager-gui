@@ -1,0 +1,177 @@
+# Japanese translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: ja <https://github.com/mainuan>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "システム上のパッケージを管理します"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "この操作を実行するには管理者のパスワードが必要です"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "パッケージインストーラ"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Flatpak と AppImage のアプリケーションを管理してインストールします"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "URL/ファイル"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "使い方: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "ファイル {path} が見つかりません"
+
+# reviewed: KDE ja katakana style without final long vowel
+# (ユーザ/マネージャ/ヘッダ/パーサ/サーバ), as in ドライバ/インストーラ/コンピュータ
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage マネージャ"
+
+# reviewed: KDE ja katakana style without final long vowel
+# (ユーザ/マネージャ/ヘッダ/パーサ/サーバ), as in ドライバ/インストーラ/コンピュータ
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak マネージャ"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "システムからのお知らせ"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "サポートされていない形式"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "検出されたパッケージ形式は、このバージョンではサポートされていません。"
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "了解して閉じる"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>状態を確認しています...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "現在の操作: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "操作が完了しました！"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "成功"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "操作が中断されたか、エラーで終了しました。"
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "警告"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>インストール中:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "エラー"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "インストールに失敗しました: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>削除中:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "削除に失敗しました: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "アプリケーションはインストール済みです"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "パッケージ '{name}' はすでにシステムにインストールされています。"
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "削除しますか？"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "アンインストール"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "インストールの確認"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "パッケージ '{name}' はシステムにインストールされていません。"
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "インストールしますか？"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "インストール"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "警告: システムに 'flatpak' グループが見つかりません。"
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "グループの確認中にエラーが発生しました: {error}"

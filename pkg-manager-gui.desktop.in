@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=PKG Manager
-GenericName=Instalador de Pacotes
-Comment=Gerencie e instale aplicativos Flatpak e AppImage
+GenericName=Package Installer
+Comment=Manage and install Flatpak and AppImage applications
 
 Exec=/usr/bin/pkg-manager-gui %f
 Icon=system-software-install

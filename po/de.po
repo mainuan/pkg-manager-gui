@@ -1,0 +1,176 @@
+# German translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: de <https://github.com/mainuan>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "Pakete auf dem System verwalten"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "Für diesen Vorgang ist das Passwort des Systemverwalters erforderlich"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "Paketinstallation"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Flatpak- und AppImage-Anwendungen verwalten und installieren"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "URL/Datei"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "Aufruf: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "Datei {path} nicht gefunden"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage-Verwaltung"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak-Verwaltung"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "Systemhinweis"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "Nicht unterstütztes Format"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "Das erkannte Paketformat wird von dieser Version nicht unterstützt."
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "Verstanden, schließen"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>Status wird überprüft ...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "Aktuelle Aktion: %p %"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "Vorgang erfolgreich abgeschlossen!"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "Erfolgreich"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "Der Vorgang wurde unterbrochen oder mit Fehlern beendet."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Warnung"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>Wird installiert:</b> {name}"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "Fehler"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Installation fehlgeschlagen: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>Wird entfernt:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "Entfernen fehlgeschlagen: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "Anwendung bereits installiert"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "Das Paket „{name}“ ist bereits auf dem System installiert."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "Möchten Sie es entfernen?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "Deinstallieren"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "Installation bestätigen"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "Das Paket „{name}“ ist nicht auf dem System installiert."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "Möchten Sie es installieren?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "Installieren"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "Warnung: Die Gruppe „flatpak“ wurde auf dem System nicht gefunden."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "Beim Überprüfen der Gruppe ist ein Fehler aufgetreten: {error}"

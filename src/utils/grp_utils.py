@@ -1,4 +1,5 @@
 import grp
+from i18n import _
 
 
 class GroupUtils:
@@ -15,8 +16,8 @@ class GroupUtils:
                 return False
 
         except KeyError:
-            print(f"Aviso: O grupo 'flatpak' não foi encontrado no sistema.")
+            print(_("Warning: the 'flatpak' group was not found on the system."))
             return False
         except Exception as e:
-            print(f"Ocorreu um erro ao verificar o grupo: {e}")
+            print(_("An error occurred while checking the group: {error}").format(error=e))
             return False

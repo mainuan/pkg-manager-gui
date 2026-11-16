@@ -1,0 +1,172 @@
+# Bengali translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: bn <https://github.com/mainuan>\n"
+"Language: bn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "সিস্টেমের প্যাকেজ পরিচালনা করুন"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "এই প্রক্রিয়াটি সম্পাদন করতে অ্যাডমিনিস্ট্রেটরের পাসওয়ার্ড প্রয়োজন"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG ম্যানেজার"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "প্যাকেজ ইনস্টলার"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Flatpak ও AppImage অ্যাপ্লিকেশন পরিচালনা ও ইনস্টল করুন"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/ফাইল"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "ব্যবহার: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "{path} ফাইলটি পাওয়া যায়নি"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage ম্যানেজার"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak ম্যানেজার"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "সিস্টেম বিজ্ঞপ্তি"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "অসমর্থিত ফরম্যাট"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "শনাক্ত করা প্যাকেজ ফরম্যাটটি এই সংস্করণে সমর্থিত নয়।"
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "বুঝেছি, বন্ধ করুন"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>অবস্থা পরীক্ষা করা হচ্ছে...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "বর্তমান কাজ: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "বাতিল করুন"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "প্রক্রিয়া সফলভাবে সম্পন্ন হয়েছে!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "সফল"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "প্রক্রিয়াটি বাধাগ্রস্ত হয়েছে বা ত্রুটিসহ শেষ হয়েছে।"
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "সতর্কতা"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>ইনস্টল করা হচ্ছে:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "ত্রুটি"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "ইনস্টলেশন ব্যর্থ হয়েছে: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>সরানো হচ্ছে:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "অপসারণ ব্যর্থ হয়েছে: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "অ্যাপ্লিকেশনটি ইতিমধ্যে ইনস্টল করা আছে"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "'{name}' প্যাকেজটি ইতিমধ্যে সিস্টেমে ইনস্টল করা আছে।"
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "আপনি কি এটি সরাতে চান?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "আনইনস্টল করুন"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "ইনস্টলেশন নিশ্চিত করুন"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "'{name}' প্যাকেজটি সিস্টেমে ইনস্টল করা নেই।"
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "আপনি কি এটি ইনস্টল করতে চান?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "ইনস্টল করুন"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "সতর্কতা: সিস্টেমে 'flatpak' গ্রুপটি পাওয়া যায়নি।"
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "গ্রুপ পরীক্ষা করার সময় একটি ত্রুটি ঘটেছে: {error}"

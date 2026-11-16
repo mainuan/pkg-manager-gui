@@ -1,0 +1,173 @@
+# Chinese translations for pkg-manager-gui package
+# pkg-manager-gui 套件的正體中文翻譯.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: zh_TW <https://github.com/mainuan>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "管理系統上的套件"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "執行此操作需要管理員密碼"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG 管理員"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "套件安裝程式"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "管理並安裝 Flatpak 與 AppImage 應用程式"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/檔案"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "用法：{command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "找不到檔案 {path}"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage 管理員"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak 管理員"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "系統通知"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "不支援的格式"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "此版本不支援偵測到的套件格式。"
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "知道了，關閉"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>正在檢查狀態...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "目前動作：%p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "取消"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "操作已成功完成！"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "成功"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "操作已中斷或完成時發生錯誤。"
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "警告"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>正在安裝：</b>{name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "錯誤"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "安裝失敗：{error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>正在移除：</b>{name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "移除失敗：{error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "應用程式已安裝"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "套件「{name}」已安裝在系統上。"
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "您要移除它嗎？"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "解除安裝"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "確認安裝"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "套件「{name}」未安裝在系統上。"
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "您要安裝它嗎？"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "安裝"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "警告：系統上找不到 'flatpak' 群組。"
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "檢查群組時發生錯誤：{error}"

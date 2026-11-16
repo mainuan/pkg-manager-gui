@@ -8,6 +8,24 @@ load_dotenv()
 APP_NAME = os.getenv("APP_NAME")
 VERSION = os.getenv("VERSION")
 MAINTAINER = os.getenv("MAINTAINER")
+POLICY_FILE = "br.com.aratie.appimagemanagerbackend.policy"
+DESKTOP_FILE = "pkg-manager-gui.desktop"
+
+
+def build_translations(working_dir: str):
+    """Compila os catálogos (.mo) e gera .desktop/polkit traduzidos (requer gettext)."""
+    env = dict(os.environ)
+    env["GETTEXTDATADIRS"] = os.path.abspath("po") + (
+        ":" + env["GETTEXTDATADIRS"] if env.get("GETTEXTDATADIRS") else "")
+    subprocess.run(["po/i18n.sh", "validate"], check=True)
+    subprocess.run(["po/i18n.sh", "compile",
+                   f"{working_dir}/usr/share/locale"], check=True)
+    subprocess.run(["msgfmt", "--desktop", f"--template={DESKTOP_FILE}.in", "-d", "po",
+                   "-o", f"{working_dir}/usr/share/applications/{DESKTOP_FILE}"],
+                   check=True, env=env)
+    subprocess.run(["msgfmt", "--xml", f"--template={POLICY_FILE}.in", "-d", "po",
+                   "-o", f"{working_dir}/usr/share/polkit-1/actions/{POLICY_FILE}"],
+                   check=True, env=env)
 
 
 def build():
@@ -40,11 +58,8 @@ def build():
     subprocess.run(
         ["chmod", "755", f"{working_dir}/usr/local/bin/appimage_manager_backend"], check=True)
 
-    subprocess.run(["cp", "br.com.aratie.appimagemanagerbackend.policy",
-                   f"{working_dir}/usr/share/polkit-1/actions/"], check=True)
-
-    subprocess.run(["cp", "pkg-manager-gui.desktop",
-                   f"{working_dir}/usr/share/applications/"], check=True)
+    print("--- Gerando traduções, .desktop e polkit ---")
+    build_translations(working_dir)
 
     print("--- Gerando arquivo de controle ---")
     control_content = f"""Package: {APP_NAME}

@@ -1,0 +1,11 @@
+# Arquivos-fonte com mensagens traduzíveis
+src/main.py
+src/service/appimage_service.py
+src/service/flatpak_service.py
+src/ui/appimage_manager.py
+src/ui/flatpak_manager.py
+src/ui/notfound_manager.py
+src/ui/pkg_manager.py
+src/utils/grp_utils.py
+[Desktop] pkg-manager-gui.desktop.in
+[ITS] br.com.aratie.appimagemanagerbackend.policy.in

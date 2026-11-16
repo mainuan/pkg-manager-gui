@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- Regras ITS para .policy do polkit (iguais às distribuídas pelo polkit),
+     versionadas aqui para não depender de libpolkit-gobject-1-dev no build. -->
+<its:rules xmlns:its="http://www.w3.org/2005/11/its"
+           version="2.0">
+  <its:translateRule selector="//*" translate="no"/>
+  <its:translateRule selector="//action/description |
+                               //action/message"
+                     translate="yes"/>
+</its:rules>

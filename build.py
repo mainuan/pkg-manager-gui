@@ -23,9 +23,22 @@ def build_translations(working_dir: str):
     subprocess.run(["msgfmt", "--desktop", f"--template={DESKTOP_FILE}.in", "-d", "po",
                    "-o", f"{working_dir}/usr/share/applications/{DESKTOP_FILE}"],
                    check=True, env=env)
+    policy = f"{working_dir}/usr/share/polkit-1/actions/{POLICY_FILE}"
     subprocess.run(["msgfmt", "--xml", f"--template={POLICY_FILE}.in", "-d", "po",
-                   "-o", f"{working_dir}/usr/share/polkit-1/actions/{POLICY_FILE}"],
-                   check=True, env=env)
+                   "-o", policy], check=True, env=env)
+    posix_xml_lang(policy)
+
+
+def posix_xml_lang(path: str):
+    """msgfmt writes BCP 47 tags (xml:lang="pt-BR"), but polkit looks up
+    g_get_locale_variants() of the session locale: pt_BR.UTF-8, pt_BR, pt.
+    A hyphenated tag never matches, so convert language-region to POSIX."""
+    import re
+    with open(path, encoding="utf-8") as fh:
+        text = fh.read()
+    text = re.sub(r'xml:lang="([a-z]{2,3})-([A-Z]{2})"', r'xml:lang="\1_\2"', text)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(text)
 
 
 def build():

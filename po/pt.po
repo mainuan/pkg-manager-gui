@@ -1,0 +1,183 @@
+# Portuguese translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: pt <https://github.com/mainuan>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "Gerir os pacotes do sistema"
+
+# reviewed: ortografia AO90, conforme KDE pt atual (atualizar, ação, ativo,
+# deteção, seleção, transação…)
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "É necessária a senha do administrador para efetuar esta operação"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "Instalador de Pacotes"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Gerir e instalar aplicações Flatpak e AppImage"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/ficheiro"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "Utilização: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "O ficheiro {path} não foi encontrado"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "Gestor de AppImage"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Gestor de Flatpak"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "Aviso do Sistema"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "Formato Não Suportado"
+
+# reviewed: ortografia AO90, conforme KDE pt atual (atualizar, ação, ativo,
+# deteção, seleção, transação…)
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "O formato de pacote detetado não é suportado por esta versão."
+
+# reviewed: capitalização: maiúscula indevida a meio da frase
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "Entendido, fechar"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>A verificar o estado...</b>"
+
+# reviewed: ortografia AO90, conforme KDE pt atual (atualizar, ação, ativo,
+# deteção, seleção, transação…)
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "Ação atual: %p%"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "Operação concluída com sucesso!"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "Sucesso"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "A operação foi interrompida ou terminou com erros."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Aviso"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>A instalar:</b> {name}"
+
+# from mainuan-grub-editor
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "Erro"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "A instalação falhou: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>A remover:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "A remoção falhou: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "Aplicação Já Instalada"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "O pacote '{name}' já está instalado no sistema."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "Deseja removê-lo?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "Desinstalar"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "Confirmar a Instalação"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "O pacote '{name}' não está instalado no sistema."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "Deseja instalá-lo?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "Instalar"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "Aviso: o grupo 'flatpak' não foi encontrado no sistema."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "Ocorreu um erro ao verificar o grupo: {error}"

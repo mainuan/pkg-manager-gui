@@ -177,6 +177,54 @@ class InspectTest(unittest.TestCase):
             self.assertEqual(fh.read(4), b"hsqs")
 
 
+@unittest.skipUnless(have("mksquashfs", "unsquashfs"), "squashfs-tools não instalado")
+class ExtractTest(unittest.TestCase):
+    """Extração sob demanda com unsquashfs -o, seguindo links só dentro da imagem."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp())
+        tree = app_tree(cls.tmp / "tree", dir_icon=None)
+        (tree / "usr/share/icons").mkdir(parents=True)
+        (tree / "usr/share/icons/x.png").write_bytes(b"\x89PNGnested")
+        os.symlink("usr/share/link.png", tree / ".DirIcon")
+        os.symlink("icons/x.png", tree / "usr/share/link.png")
+        os.symlink("../../etc/passwd", tree / "esc")
+        os.symlink("/etc/passwd", tree / "abs")
+        os.symlink("loop2", tree / "loop1")
+        os.symlink("loop1", tree / "loop2")
+        with open(tree / "bomb", "wb") as fh:  # comprime para poucos KB
+            fh.truncate(B.MAX_EXTRACTED_SIZE + 4 * 1024 * 1024)
+        cls.image = cls.tmp / "a.AppImage"
+        cls.offset = build_appimage(cls.image, make_squashfs(tree, cls.tmp / "x.sqfs"))
+        cls.backend = B.AppImageBackend()
+        cls.dest = cls.backend._extract_metadata(cls.image, cls.offset, cls.tmp / "root")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp)
+
+    def read(self, name, limit=1 << 20):
+        return self.backend._read_from_image(self.image, self.offset, self.dest, name, limit)
+
+    def test_only_desktop_files_are_extracted_first(self):
+        self.assertEqual(sorted(os.listdir(self.dest)), ["foo.desktop"])
+        self.assertIn(b"Name=Foo App", self.read("foo.desktop"))
+
+    def test_symlink_chain_inside_the_image(self):
+        self.assertEqual(self.read(".DirIcon"), b"\x89PNGnested")
+
+    def test_links_outside_the_image_and_loops(self):
+        for name in ("esc", "abs", "loop1", "missing.png"):
+            self.assertIsNone(self.read(name), name)
+
+    def test_size_limits(self):
+        self.assertIsNone(self.read("big", limit=1000))
+        self.assertIsNone(self.read("bomb"))
+        self.assertFalse(os.path.exists(self.dest / "bomb")
+                         and os.path.getsize(self.dest / "bomb") > B.MAX_EXTRACTED_SIZE)
+
+
 class CopyTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -394,6 +442,21 @@ class InstallTest(unittest.TestCase):
                          "squashfs-tools/dpkg-deb não instalados")
     def test_icon_symlink_outside_the_image_is_ignored(self):
         image = self.appimage(dir_icon="/etc/passwd")
+        saved = self.tmp / "saved.deb"
+        self.backend.dpkg = [sys.executable, "-c",
+                             "import shutil, sys; shutil.copy(sys.argv[-1], sys.argv[1])",
+                             str(saved)]
+        code, out = self.run_install(image)
+        self.assertEqual(code, 0, out)
+        listing = subprocess.run(["dpkg-deb", "-c", str(saved)], check=True,
+                                 capture_output=True, text=True).stdout
+        self.assertNotIn("fooappimage.png", listing)
+        self.assertIn("fooappimage.desktop", listing)
+
+    @unittest.skipUnless(have("mksquashfs", "unsquashfs", "dpkg-deb"),
+                         "squashfs-tools/dpkg-deb não instalados")
+    def test_appimage_without_icon(self):
+        image = self.appimage(dir_icon=None)
         saved = self.tmp / "saved.deb"
         self.backend.dpkg = [sys.executable, "-c",
                              "import shutil, sys; shutil.copy(sys.argv[-1], sys.argv[1])",

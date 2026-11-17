@@ -8,7 +8,8 @@ Segurança da instalação:
 * o AppImage NUNCA é executado: só AppImages do tipo 2 (runtime ELF seguido de
   um SquashFS) são aceitos; o deslocamento do SquashFS é calculado a partir do
   cabeçalho ELF (e_shoff + e_shentsize * e_shnum, como
-  ``appimagetool --appimage-offset``) e o .desktop e o ícone são extraídos com
+  ``appimagetool --appimage-offset``) e só o .desktop e o ícone (.DirIcon e
+  os alvos dos seus links simbólicos dentro da imagem) são extraídos com
   ``unsquashfs -o <deslocamento>``;
 * o arquivo é aberto com as permissões de quem pediu a instalação
   (``PKEXEC_UID``) e copiado para um diretório temporário privado do root
@@ -22,7 +23,9 @@ Códigos de saída: 0 sucesso, 1 erro, 3 arquivo que não é um AppImage tipo 2.
 import hashlib
 import os
 import pwd
+import posixpath
 import re
+import resource
 import stat
 import struct
 import subprocess
@@ -40,6 +43,8 @@ SQUASHFS_SUPERBLOCK_SIZE = 96
 ELF_ARCHITECTURES = {62: "amd64", 183: "arm64", 3: "i386", 40: "armhf"}
 MAX_DESKTOP_SIZE = 1024 * 1024
 MAX_ICON_SIZE = 10 * 1024 * 1024
+MAX_EXTRACTED_SIZE = 16 * 1024 * 1024
+MAX_SYMLINK_HOPS = 10
 SAFE_PATH = "/usr/sbin:/usr/bin:/sbin:/bin"
 PACKAGE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
 VERSION_RE = re.compile(r"^[0-9][A-Za-z0-9.+~]*-[A-Za-z0-9.+~]+$")
@@ -226,17 +231,49 @@ class AppImageBackend:
                     out.write(chunk)
         return md5.hexdigest()
 
+    def _unsquashfs(self, image: Path, offset: int, dest: Path, names: list[str],
+                    wildcards: bool) -> subprocess.CompletedProcess:
+        """Extrai names do SquashFS (no deslocamento offset) para dest, que
+        pode já existir. Nenhum arquivo extraído passa de MAX_EXTRACTED_SIZE
+        (RLIMIT_FSIZE), contra imagens que expandem para gigabytes."""
+        def limit_file_size():
+            resource.setrlimit(resource.RLIMIT_FSIZE, (MAX_EXTRACTED_SIZE, MAX_EXTRACTED_SIZE))
+        cmd = ["unsquashfs", "-no-progress", "-no-xattrs"]
+        if not wildcards:
+            cmd.append("-no-wildcards")
+        cmd += ["-o", str(offset), "-d", str(dest), str(image), *names]
+        return subprocess.run(cmd, capture_output=True, text=True, env=self._env(), timeout=120,
+                              check=False, preexec_fn=limit_file_size)
+
     def _extract_metadata(self, image: Path, offset: int, dest: Path) -> Path:
-        """Extrai só os .desktop da raiz e o .DirIcon (e os alvos dos seus
-        links simbólicos) sem executar o AppImage."""
-        cmd = ["unsquashfs", "-no-progress", "-no-xattrs",
-               "-follow-symlinks", "-missing-symlinks",
-               "-o", str(offset), "-d", str(dest), str(image), "*.desktop", ".DirIcon"]
-        result = subprocess.run(cmd, capture_output=True, text=True, env=self._env(), timeout=120, check=False)
+        """Extrai só os .desktop da raiz do AppImage, sem executá-lo."""
+        result = self._unsquashfs(image, offset, dest, ["*.desktop"], wildcards=True)
         if result.returncode != 0 or not dest.is_dir():
             raise RuntimeError(f"unsquashfs falhou (código {result.returncode}): "
                                f"{(result.stderr or result.stdout).strip()}")
         return dest
+
+    def _read_from_image(self, image: Path, offset: int, dest: Path, name: str,
+                         limit: int) -> bytes | None:
+        """Lê name da imagem, extraindo-o sob demanda e seguindo links
+        simbólicos relativos que fiquem dentro da imagem (como .DirIcon ->
+        usr/share/icons/...). Links absolutos ou que saem da imagem: None."""
+        path = name
+        for _ in range(MAX_SYMLINK_HOPS):
+            local = dest / path
+            if not os.path.lexists(local):
+                self._unsquashfs(image, offset, dest, [path], wildcards=False)
+                if not os.path.lexists(local):
+                    return None
+            if not local.is_symlink():
+                return read_inside(dest, path, limit)
+            target = os.readlink(local)
+            if os.path.isabs(target):
+                return None
+            path = posixpath.normpath(posixpath.join(posixpath.dirname(path), target))
+            if path == ".." or path.startswith("../") or path == ".":
+                return None
+        return None
 
     @staticmethod
     def _place(root: Path, target: Path) -> Path:
@@ -327,7 +364,8 @@ class AppImageBackend:
 
                 content = None
                 for desktop_file in sorted(extract_path.glob("*.desktop")):
-                    data = read_inside(extract_path, desktop_file.name, MAX_DESKTOP_SIZE)
+                    data = self._read_from_image(image, offset, extract_path,
+                                                 desktop_file.name, MAX_DESKTOP_SIZE)
                     if data is not None:
                         content = data.decode("utf-8", errors="ignore")
                         break
@@ -336,7 +374,8 @@ class AppImageBackend:
                     sys.exit(EXIT_ERROR)
 
                 app_name = (re.search(r'^Name=(.*)', content, re.M) or [None, "App"])[1].strip()
-                icon = read_inside(extract_path, ".DirIcon", MAX_ICON_SIZE)
+                icon = self._read_from_image(image, offset, extract_path, ".DirIcon",
+                                             MAX_ICON_SIZE)
                 desktop = self._rewrite_desktop(content, self.opt_dir / file_hash, pkg_name)
 
                 try:

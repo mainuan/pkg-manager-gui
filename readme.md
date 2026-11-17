@@ -1,5 +1,5 @@
-# Pkg Manager GUI (Qt 6) do Aratie OS
-Este projeto é uma interface gráfica moderna e leve para a instalação e gerenciamento de pacotes Pkg, desenvolvida para o Aratie OS. Ele substitui a implementação anterior baseada em Shell Script e YA.
+# Pkg Manager GUI (Qt 6) da Mainuan
+Este projeto é uma interface gráfica moderna e leve para a instalação e gerenciamento de pacotes Pkg, desenvolvida para a Mainuan. Ele substitui a implementação anterior baseada em Shell Script e YA.
 
 ## 🚀 Funcionalidades
 Instalação Simplificada: Interface intuitiva com barras de progresso em tempo real para o pacote atual e o progresso geral.
@@ -29,7 +29,7 @@ Gerenciamento de Pacotes: Pkg CLI
 
 1. Clone o projeto
 ```bash
-git clone https://github.com/aratie-os/pkg-manager-gui
+git clone https://github.com/mainuan/pkg-manager-gui
 cd pkg-manager-gui
 ```
 
@@ -47,7 +47,7 @@ Crie um arquivo .env na raiz do projeto:
 APP_NAME=pkg-manager-gui
 VERSION=26.01.03
 MAINTAINER=Seu Nome <email@provedor.com>
-DESCRIPTION=Manager GUI para Pkg do Aratie OS
+DESCRIPTION=Gerenciador gráfico de aplicativos Flatpak e AppImage (Qt 6) da Mainuan
 ```
 
 ## 🏗️ Build e Empacotamento

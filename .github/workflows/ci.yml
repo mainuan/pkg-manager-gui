@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v[0-9]*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+jobs:
+  package:
+    permissions:
+      contents: write # only the release job uses it, and only for v* tags
+    uses: mainuan/.github/.github/workflows/debian-package.yml@2409a50535befe90ac3bbfc4db6eed7d65eac4e5
+    with:
+      package: pkg-manager-gui
+      release-title: PKG Manager
+      test-command: po/i18n.sh check-pot && po/i18n.sh validate && python3 tests/test_logic.py
+      smoke-command: |
+        test -f /usr/share/locale/pt_BR/LC_MESSAGES/pkg-manager-gui.mo
+        test -f /usr/share/locale/ar/LC_MESSAGES/pkg-manager-gui.mo
+        test -f /usr/share/man/man1/pkg-manager-gui.1.gz
+        desktop=/usr/share/applications/pkg-manager-gui.desktop
+        grep -qx 'Exec=/usr/bin/pkg-manager-gui %f' "$desktop"
+        grep -q '^Name\[pt_BR\]=' "$desktop"
+        # Política polkit: mesmo ID de ação, apontando para o backend instalado.
+        policy=/usr/share/polkit-1/actions/br.com.aratie.appimagemanagerbackend.policy
+        backend=/usr/libexec/pkg-manager-gui/appimage_manager_backend
+        grep -q '<action id="br.com.aratie.appimagemanager.pkexec">' "$policy"
+        grep -q "\"org.freedesktop.policykit.exec.path\">$backend<" "$policy"
+        grep -q 'xml:lang="pt_BR"' "$policy"
+        test -x "$backend"
+        test "$(head -n 1 "$backend")" = '#!/usr/bin/python3'
+        rc=0; out="$("$backend" -i "$HOME/x.AppImage" 2>&1)" || rc=$?
+        echo "$out"; test "$rc" -eq 1; grep -q 'root' <<<"$out"
+        # Uso, em pt_BR e em inglês.
+        rc=0; out="$(LANGUAGE=pt_BR pkg-manager-gui 2>&1)" || rc=$?
+        echo "$out"; test "$rc" -eq 1; grep -qx 'Uso: pkg-manager-gui <url/arquivo>' <<<"$out"
+        rc=0; out="$(LANGUAGE=en pkg-manager-gui 2>&1)" || rc=$?
+        test "$rc" -eq 1; grep -qx 'Usage: pkg-manager-gui <url/file>' <<<"$out"
+        # Interface traduzida a partir dos módulos e catálogos instalados.
+        LANGUAGE=pt_BR python3 - <<'PY'
+        import sys
+        sys.path.insert(0, "/usr/share/pkg-manager-gui")
+        from PySide6.QtWidgets import QApplication
+        from i18n import install_qt_translator
+        app = QApplication([])
+        install_qt_translator(app)
+        from ui.notfound_manager import NotFoundManager
+        title = NotFoundManager().windowTitle()
+        print(title)
+        assert title == "Aviso do Sistema", title
+        PY
+        # A janela abre (offscreen) para cada tipo de arquivo e fica aguardando
+        # a confirmação até o timeout: sem exceções.
+        for f in Foo-1.0-x86_64.AppImage org.example.App.flatpakref nada.deb; do
+          : > "$HOME/$f"
+          rc=0; timeout 10 pkg-manager-gui "$HOME/$f" > "$HOME/gui.log" 2>&1 || rc=$?
+          echo "== $f: $rc"; cat "$HOME/gui.log"
+          test "$rc" -eq 124
+          if grep -q Traceback "$HOME/gui.log"; then exit 1; fi
+        done

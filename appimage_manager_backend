@@ -113,7 +113,10 @@ class AppImageBackend:
         if not pkg_name.endswith("appimage"):
             pkg_name += "appimage"
             
-        subprocess.run(["dpkg", "-r", pkg_name])
+        result = subprocess.run(["dpkg", "-r", pkg_name])
+        if result.returncode != 0:
+            print(f"Erro: dpkg não removeu {pkg_name} (código {result.returncode}).")
+            sys.exit(1)
         subprocess.run(["update-desktop-database"])
         
         print(f"Sucesso: {pkg_name} removido.")

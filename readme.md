@@ -10,18 +10,14 @@ Gestão de Remoção: Oferece a opção de desinstalação caso o usuário tente
 
 Parsing Inteligente: Monitora a saída do Pkg via QProcess para exibir porcentagens precisas.
 
-Portable ELF: Gera um binário executável único que não depende da instalação manual de bibliotecas Python no sistema alvo.
-
-Empacotamento DEB: Script automatizado para gerar pacotes .deb prontos para distribuição.
+Pacote Debian: usa o Python e o PySide6 do Ubuntu (`python3-pyside6.*`), com `.desktop`, política polkit e traduções.
 
 ## 🛠 Tecnologias Utilizadas
 Linguagem: Python 3.10+
 
 Interface Gráfica: PySide6 (Qt 6)
 
-Configuração: Python-dotenv
-
-Build: PyInstaller
+Empacotamento: debhelper (`debian/`)
 
 Gerenciamento de Pacotes: Pkg CLI
 
@@ -33,33 +29,31 @@ git clone https://github.com/mainuan/pkg-manager-gui
 cd pkg-manager-gui
 ```
 
-2. Instale as depenências
+2. Para rodar a partir do código-fonte (requer `gettext` e PySide6 — no Ubuntu,
+   `python3-pyside6.qtwidgets`):
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-3. Configurar o .env
-Crie um arquivo .env na raiz do projeto:
-
-```env
-APP_NAME=pkg-manager-gui
-VERSION=26.01.03
-MAINTAINER=Seu Nome <email@provedor.com>
-DESCRIPTION=Gerenciador gráfico de aplicativos Flatpak e AppImage (Qt 6) da Mainuan
+po/i18n.sh compile build/locale
+python3 src/main.py /caminho/para/aplicativo.flatpakref
 ```
 
 ## 🏗️ Build e Empacotamento
-Para gerar o executável binário (ELF) e o pacote .deb automaticamente, execute o script de build:
+O pacote `pkg-manager-gui` é gerado a partir de `debian/`:
 
 ```bash
-python3 build.py
+dpkg-buildpackage -us -uc -b
 ```
-O binário será gerado na pasta dist/ junto com pacote .deb instalável na raiz do projeto como 
+
+Ele instala `/usr/bin/pkg-manager-gui`, o código em `/usr/share/pkg-manager-gui`,
+o backend de AppImage em `/usr/libexec/pkg-manager-gui/appimage_manager_backend`
+(executado como root via `pkexec`, ação polkit `br.com.aratie.appimagemanager.pkexec`),
+o `.desktop`, a política polkit e as traduções. Os testes ficam em `tests/`.
+
+O CI (`.github/workflows/ci.yml`) compila, testa, roda o lintian e instala o
+pacote num Ubuntu 26.04 limpo; uma release só é publicada ao enviar uma tag
+`v<versão>` igual à de `debian/changelog`.
 
 ## 📝 Como usar via linha de comando
-A aplicação aceita o caminho de um arquivo flatpak, ou, de um appimage:
+A aplicação aceita o caminho de um arquivo .flatpakref ou .AppImage:
 
 ```bash
 # O sistema detectará automaticamente se deve instalar ou remover.

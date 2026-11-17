@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
+<!-- gettext < 1.0 removes a trailing ".in" before matching the pattern, so
+     both forms are needed (*.policy.in templates and *.policy). -->
 <locatingRules>
   <locatingRule name="polkit policy" pattern="*.policy.in">
+    <documentRule localName="policyconfig" target="polkit.its"/>
+  </locatingRule>
+  <locatingRule name="polkit policy" pattern="*.policy">
     <documentRule localName="policyconfig" target="polkit.its"/>
   </locatingRule>
 </locatingRules>

@@ -1,0 +1,21 @@
+pkg-manager-gui (1.1.0) resolute; urgency=medium
+
+  * Pacote Debian de verdade: usa o Python e o PySide6 do Ubuntu
+    (python3-pyside6.*) em vez de um binário PyInstaller de 80 MB, e instala
+    o .desktop, a política polkit, o backend de AppImage, as traduções e uma
+    página de manual. Substitui o pacote flatpak-manager-gui da versão 1.0.0.
+  * Interface traduzida (gettext) em 33 idiomas, também no .desktop e na
+    política polkit.
+  * O backend de AppImage passa para /usr/libexec/pkg-manager-gui (pacotes
+    não instalam em /usr/local); o ID da ação polkit não muda.
+  * Arquivos .AppImage (com maiúsculas) eram recusados como formato não
+    suportado; a extensão agora é comparada sem diferenciar maiúsculas.
+  * Um Flatpak era dado como instalado quando outro ID apenas o continha
+    (por exemplo org.gimp.GIMP.Plugin.*); a comparação agora é exata.
+  * A remoção de um AppImage informava sucesso mesmo quando o dpkg falhava.
+  * O .desktop deixa de se associar a pacotes .flatpak e .flatpakrepo, que o
+    programa não trata.
+  * A mensagem de uso mostra o nome do programa instalado (pkg-manager-gui).
+  * Pipeline de CI com testes, lintian e teste de instalação e remoção.
+
+ -- Charles Santana <charlesstna@proton.me>  Tue, 17 Nov 2026 14:30:00 -0300

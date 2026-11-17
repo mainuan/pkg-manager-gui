@@ -1,0 +1,44 @@
+Source: pkg-manager-gui
+Section: admin
+Priority: optional
+Maintainer: Charles Santana <charlesstna@proton.me>
+Uploaders: Guilherme Rialli Oliveira <gui.rialli@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               desktop-file-utils,
+               gettext,
+               libxml2-utils,
+               python3,
+               python3-pyside6.qtcore,
+               python3-pyside6.qtgui,
+               python3-pyside6.qtwidgets,
+               qt6-translations-l10n
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/mainuan/pkg-manager-gui
+Vcs-Browser: https://github.com/mainuan/pkg-manager-gui
+Vcs-Git: https://github.com/mainuan/pkg-manager-gui.git
+
+Package: pkg-manager-gui
+Architecture: all
+Depends: ${misc:Depends},
+         desktop-file-utils,
+         flatpak,
+         pkexec,
+         python3,
+         python3-pyside6.qtcore,
+         python3-pyside6.qtgui,
+         python3-pyside6.qtwidgets
+Recommends: qt6-translations-l10n
+Conflicts: flatpak-manager-gui
+Replaces: flatpak-manager-gui
+Description: graphical installer for Flatpak references and AppImage files
+ pkg-manager-gui opens a .flatpakref or .AppImage file, asks whether it
+ should be installed (or removed, when it is already installed) and shows
+ the progress in a Qt 6 window.
+ .
+ Flatpak applications are installed with the flatpak command. AppImage
+ files are copied to /opt/appimages-installed by a helper that runs as
+ root through pkexec, with a menu entry, an icon and a record in the dpkg
+ database so that they can be removed later.
+ .
+ This package replaces flatpak-manager-gui.

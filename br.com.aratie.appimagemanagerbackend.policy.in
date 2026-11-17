@@ -18,7 +18,7 @@
       <allow_active>auth_admin</allow_active>
     </defaults>
 
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/appimage_manager_backend</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/pkg-manager-gui/appimage_manager_backend</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
 </policyconfig>

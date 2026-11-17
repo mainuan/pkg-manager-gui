@@ -9,7 +9,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         # Translators: placeholder for the command-line argument in the usage line.
         argument = _("url/file")
-        print(_("Usage: {command}").format(command=f"flatpak-manager-gui <{argument}>"))
+        print(_("Usage: {command}").format(command=f"pkg-manager-gui <{argument}>"))
         sys.exit(1)
 
     window = BuildUi.AutoInferPkg(sys.argv[1])

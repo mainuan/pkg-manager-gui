@@ -10,7 +10,7 @@ class BuildUi:
         url_lower = url.lower()
         if url_lower.endswith('flatpakref'):
             return FlatpakManager(url)
-        elif url.endswith('appimage'):
+        elif url_lower.endswith('appimage'):
             return AppImageManager(url)
 
         return NotFoundManager()

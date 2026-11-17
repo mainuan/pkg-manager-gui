@@ -55,6 +55,6 @@ class FlatpakService(PkgService):
                 ["flatpak", "list", "--columns=application"],
                 capture_output=True, text=True
             )
-            return app_id in result.stdout
+            return app_id in result.stdout.split()
         except:
             return False

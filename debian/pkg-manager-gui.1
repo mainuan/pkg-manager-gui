@@ -19,12 +19,20 @@ group, the command runs through
 .BR pkexec (1).
 .TP
 .I *.AppImage
-The file is copied to
+A type 2 AppImage is copied to
 .IR /opt/appimages-installed ,
 with a menu entry and an icon, and recorded in the dpkg database as the
 package
 .IR <name> appimage,
-or removed when that package is already installed. The work is done by
+or removed when that package is already installed.
+The AppImage is never run: the menu entry and the icon are read from the
+embedded SquashFS with
+.BR unsquashfs (1),
+and the record is a Debian package built with
+.BR dpkg-deb (1)
+and installed with
+.BR dpkg (1).
+Type 1 AppImages and other files are refused. The work is done by
 .I /usr/libexec/pkg-manager-gui/appimage_manager_backend
 through
 .BR pkexec (1)

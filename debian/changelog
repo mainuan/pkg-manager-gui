@@ -1,3 +1,29 @@
+pkg-manager-gui (1.1.1) resolute; urgency=high
+
+  * Segurança: o backend de AppImage não executa mais o AppImage como root
+    para extraí-lo (--appimage-extract). Só AppImages do tipo 2 são aceitos:
+    o deslocamento do SquashFS é calculado pelo cabeçalho ELF
+    (e_shoff + e_shentsize * e_shnum), a assinatura hsqs é conferida e só o
+    .desktop e o .DirIcon são extraídos com unsquashfs -o. Links simbólicos
+    que saem da imagem são ignorados.
+  * Segurança: o arquivo é aberto com as permissões de quem pediu a
+    instalação (PKEXEC_UID) e copiado para um diretório temporário privado
+    do root (0700); a validação e a instalação usam só essa cópia. O backend
+    deixa de alterar as permissões do arquivo do usuário.
+  * AppImages do tipo 1 e outros arquivos são recusados (código de saída 3)
+    e a interface explica o motivo, com a mensagem traduzida nos 33 idiomas.
+  * O registro no dpkg deixa de editar /var/lib/dpkg/status sem a trava:
+    o backend gera um pacote .deb com dpkg-deb --build e o instala com
+    dpkg -i, que registra todos os arquivos. A remoção (dpkg -r) agora apaga
+    também os ícones, antes esquecidos em /usr/share/icons e
+    /usr/share/pixmaps. A arquitetura do pacote vem do cabeçalho ELF.
+  * Depends: squashfs-tools.
+  * Testes do backend sem root (tests/test_backend.py): AppImage sintético,
+    cálculo do deslocamento, recusas, conteúdo do .deb e instalação e
+    remoção com dpkg --root.
+
+ -- Charles Santana <charlesstna@proton.me>  Tue, 17 Nov 2026 18:50:58 -0300
+
 pkg-manager-gui (1.1.0) resolute; urgency=medium
 
   * Pacote Debian de verdade: usa o Python e o PySide6 do Ubuntu

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkg-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"POT-Creation-Date: 2026-11-17 18:47-0300\n"
 "PO-Revision-Date: 2026-11-16 11:17-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: ro <https://github.com/mainuan>\n"
@@ -54,9 +54,19 @@ msgstr "Utilizare: {command}"
 msgid "File {path} not found"
 msgstr "Fișierul {path} nu a fost găsit"
 
-#: src/ui/appimage_manager.py:9
+#: src/ui/appimage_manager.py:15
 msgid "AppImage Manager"
 msgstr "Administrator AppImage"
+
+#: src/ui/appimage_manager.py:40 src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Avertisment"
+
+#: src/ui/appimage_manager.py:41
+msgid ""
+"This file is not a supported AppImage. Only type 2 AppImages can be "
+"installed; type 1 AppImages and other files are refused."
+msgstr "Acest fișier nu este un AppImage acceptat. Pot fi instalate doar AppImage de tip 2; AppImage de tip 1 și alte fișiere sunt refuzate."
 
 #: src/ui/flatpak_manager.py:10
 msgid "Flatpak Manager"
@@ -104,10 +114,6 @@ msgstr "Succes"
 #: src/ui/pkg_manager.py:70
 msgid "The operation was interrupted or finished with errors."
 msgstr "Operația a fost întreruptă sau s-a încheiat cu erori."
-
-#: src/ui/pkg_manager.py:70
-msgid "Warning"
-msgstr "Avertisment"
 
 #: src/ui/pkg_manager.py:78
 #, python-brace-format

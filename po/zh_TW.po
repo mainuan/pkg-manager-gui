@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkg-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"POT-Creation-Date: 2026-11-17 18:47-0300\n"
 "PO-Revision-Date: 2026-11-16 11:17-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: zh_TW <https://github.com/mainuan>\n"
@@ -52,9 +52,19 @@ msgstr "用法：{command}"
 msgid "File {path} not found"
 msgstr "找不到檔案 {path}"
 
-#: src/ui/appimage_manager.py:9
+#: src/ui/appimage_manager.py:15
 msgid "AppImage Manager"
 msgstr "AppImage 管理員"
+
+#: src/ui/appimage_manager.py:40 src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "警告"
+
+#: src/ui/appimage_manager.py:41
+msgid ""
+"This file is not a supported AppImage. Only type 2 AppImages can be "
+"installed; type 1 AppImages and other files are refused."
+msgstr "此檔案不是受支援的 AppImage。只能安裝類型 2 的 AppImage；類型 1 的 AppImage 與其他檔案會被拒絕。"
 
 #: src/ui/flatpak_manager.py:10
 msgid "Flatpak Manager"
@@ -100,10 +110,6 @@ msgstr "成功"
 #: src/ui/pkg_manager.py:70
 msgid "The operation was interrupted or finished with errors."
 msgstr "操作已中斷或完成時發生錯誤。"
-
-#: src/ui/pkg_manager.py:70
-msgid "Warning"
-msgstr "警告"
 
 #: src/ui/pkg_manager.py:78
 #, python-brace-format

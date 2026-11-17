@@ -13,6 +13,7 @@ override_dh_auto_build:
 override_dh_auto_test:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	python3 tests/test_logic.py
+	python3 tests/test_backend.py
 	python3 tests/test_i18n.py
 	desktop-file-validate debian/generated/usr/share/applications/pkg-manager-gui.desktop
 	xmllint --noout debian/generated/usr/share/polkit-1/actions/br.com.aratie.appimagemanagerbackend.policy

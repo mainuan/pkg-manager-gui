@@ -22,7 +22,7 @@ jobs:
     with:
       package: pkg-manager-gui
       release-title: PKG Manager
-      test-command: po/i18n.sh check-pot && po/i18n.sh validate && python3 tests/test_logic.py
+      test-command: po/i18n.sh check-pot && po/i18n.sh validate && python3 tests/test_logic.py && python3 tests/test_backend.py
       smoke-command: |
         test -f /usr/share/locale/pt_BR/LC_MESSAGES/pkg-manager-gui.mo
         test -f /usr/share/locale/ar/LC_MESSAGES/pkg-manager-gui.mo
@@ -38,6 +38,11 @@ jobs:
         grep -q 'xml:lang="pt_BR"' "$policy"
         test -x "$backend"
         test "$(head -n 1 "$backend")" = '#!/usr/bin/python3'
+        # O backend extrai o AppImage com unsquashfs (Depends: squashfs-tools),
+        # sem executá-lo, e registra-o com dpkg-deb/dpkg -i.
+        command -v unsquashfs
+        if grep -q -e '--appimage-extract' -e 'dpkg/status' "$backend"; then exit 1; fi
+        grep -q 'dpkg-deb' "$backend"
         rc=0; out="$("$backend" -i "$HOME/x.AppImage" 2>&1)" || rc=$?
         echo "$out"; test "$rc" -eq 1; grep -q 'root' <<<"$out"
         # Uso, em pt_BR e em inglês.

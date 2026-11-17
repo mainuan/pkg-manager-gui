@@ -1,0 +1,47 @@
+.TH PKG-MANAGER-GUI 1 "2026-11-17" "pkg-manager-gui 1.1.0" "Mainuan"
+.SH NAME
+pkg-manager-gui \- graphical installer for Flatpak references and AppImage files
+.SH SYNOPSIS
+.B pkg-manager-gui
+.I file
+.SH DESCRIPTION
+.B pkg-manager-gui
+chooses what to do from the file name:
+.TP
+.I *.flatpakref
+The application is installed with
+.BR flatpak (1),
+or removed when an application with the same ID (the file name without
+the extension) is already installed. When the user is not root and not a
+member of the
+.B flatpak
+group, the command runs through
+.BR pkexec (1).
+.TP
+.I *.AppImage
+The file is copied to
+.IR /opt/appimages-installed ,
+with a menu entry and an icon, and recorded in the dpkg database as the
+package
+.IR <name> appimage,
+or removed when that package is already installed. The work is done by
+.I /usr/libexec/pkg-manager-gui/appimage_manager_backend
+through
+.BR pkexec (1)
+(polkit action
+.BR br.com.aratie.appimagemanager.pkexec ,
+administrator authentication required).
+.PP
+A question confirms the installation or removal, a Qt window shows the
+progress and a message box reports the result. Other files show a notice
+that the format is not supported.
+.SH EXIT STATUS
+.B 1
+when no file is given or the operation could not be started.
+.SH ENVIRONMENT
+The interface follows
+.BR LANGUAGE ,
+.BR LC_ALL ,
+.BR LC_MESSAGES " and " LANG .
+.SH EXAMPLE
+pkg-manager-gui ~/Downloads/org.gimp.GIMP.flatpakref

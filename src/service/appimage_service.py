@@ -12,7 +12,7 @@ class AppImageService(PkgService):
         self._is_su = os.getuid() == 0
         self.process = process
         self.is_user_in_group = False
-        self.wrapper_path = "/usr/local/bin/appimage_manager_backend"
+        self.wrapper_path = "/usr/libexec/pkg-manager-gui/appimage_manager_backend"
 
     def install(self, url: str):
         file_path = Path(url).resolve()

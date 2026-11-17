@@ -1,6 +1,6 @@
 # Internacionalização (i18n) do pkg-manager-gui
 
-* **Domínio gettext:** `pkg-manager-gui` (`APP_NAME`/`Package:` gerado pelo `build.py`).
+* **Domínio gettext:** `pkg-manager-gui` (nome do pacote Debian em `debian/control`).
 * **Idioma-fonte:** inglês; a interface brasileira está em `po/pt_BR.po`.
 * **API:** `src/i18n.py` — `gettext.translation(..., fallback=True)`, exporta `_`,
   `ngettext`, `pgettext` e `install_qt_translator(app)` (carrega `qtbase_<lang>.qm`
@@ -19,12 +19,13 @@ po/its/polkit.{its,loc}      regras ITS do polkit (para *.policy.in)
 pkg-manager-gui.desktop.in   modelo do .desktop (Name/GenericName/Comment em inglês)
 br.com.aratie.appimagemanagerbackend.policy.in   modelo da política polkit
 tests/test_i18n.py           teste automático (pt_BR e en/C)
+tests/test_logic.py          testes da lógica (formato do arquivo, Flatpak instalado, backend)
 ```
 
 ## Onde os catálogos são procurados
 
 1. `$PKG_MANAGER_GUI_LOCALEDIR`;
-2. `build/locale` na raiz do repositório (só fora do binário PyInstaller);
+2. `build/locale` na raiz do repositório (execução a partir do código-fonte);
 3. `/usr/share/locale` (pacote instalado).
 
 ## Tarefas
@@ -40,10 +41,11 @@ python3 tests/test_i18n.py                 # QT_QPA_PLATFORM=offscreen interno
 
 ## Empacotamento
 
-`build.py` (requer `gettext` no ambiente de build) valida os catálogos, instala
-`/usr/share/locale/<lang>/LC_MESSAGES/pkg-manager-gui.mo` e gera, com
-`msgfmt --desktop`/`msgfmt --xml`, o `.desktop` e a política polkit traduzidos
-com os mesmos nomes de arquivo instalados de antes. Não há CI neste repositório.
+`debian/rules` chama `python3 build.py <destino>` (requer `gettext`), que valida
+os catálogos, compila `/usr/share/locale/<lang>/LC_MESSAGES/pkg-manager-gui.mo`
+e gera, com `msgfmt --desktop`/`msgfmt --xml`, o `.desktop` e a política polkit
+traduzidos. O CI (`.github/workflows/ci.yml`) roda `check-pot`, `validate`, os
+testes e um teste de fumaça com o pacote instalado.
 
 ## Particularidades
 

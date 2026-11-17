@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+export QT_QPA_PLATFORM = offscreen
+export PYTHONDONTWRITEBYTECODE = 1
+
+PKG = debian/pkg-manager-gui
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	python3 build.py debian/generated
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	python3 tests/test_logic.py
+	python3 tests/test_i18n.py
+	desktop-file-validate debian/generated/usr/share/applications/pkg-manager-gui.desktop
+	xmllint --noout debian/generated/usr/share/polkit-1/actions/br.com.aratie.appimagemanagerbackend.policy
+endif
+
+override_dh_auto_install:
+	mkdir -p $(PKG)/usr/share/pkg-manager-gui
+	cp -r src/. $(PKG)/usr/share/pkg-manager-gui/
+	find $(PKG)/usr/share/pkg-manager-gui -name __pycache__ -prune -exec rm -rf {} +
+	find $(PKG)/usr/share/pkg-manager-gui -type f -exec chmod 0644 {} +
+	install -D -m 0755 debian/pkg-manager-gui.sh $(PKG)/usr/bin/pkg-manager-gui
+	install -D -m 0755 appimage_manager_backend \
+	        $(PKG)/usr/libexec/pkg-manager-gui/appimage_manager_backend
+	sed -i '1s|^#!.*|#!/usr/bin/python3|' $(PKG)/usr/libexec/pkg-manager-gui/appimage_manager_backend
+	cp -r debian/generated/usr/. $(PKG)/usr/
+
+override_dh_auto_clean:
+	rm -rf debian/generated build
+	find . -name __pycache__ -prune -exec rm -rf {} +

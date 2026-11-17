@@ -145,7 +145,7 @@ class I18nTest(unittest.TestCase):
             "O tipo de formato de pacote detectado não é compatível com esta versão."])
         self.assertEqual(o["notfound_button"], "Entendi, fechar")
         self.assertEqual(o["qt_close"].replace("&", ""), "Fechar")
-        self.assertEqual(self.usage("pt_BR"), "Uso: flatpak-manager-gui <url/arquivo>\n")
+        self.assertEqual(self.usage("pt_BR"), "Uso: pkg-manager-gui <url/arquivo>\n")
 
     def test_english(self):
         for language in ("en", "C"):
@@ -158,7 +158,7 @@ class I18nTest(unittest.TestCase):
                 "Do you want to install it?", ["Install", "Cancel"]])
             self.assertEqual(o["notfound_title"], "System Notice")
             self.assertEqual(o["qt_close"].replace("&", ""), "Close")
-            self.assertEqual(self.usage(language), "Usage: flatpak-manager-gui <url/file>\n")
+            self.assertEqual(self.usage(language), "Usage: pkg-manager-gui <url/file>\n")
 
     def direction(self, language):
         r = subprocess.run([sys.executable, "-c", DIRECTION_PROBE, os.path.join(ROOT, "src")],

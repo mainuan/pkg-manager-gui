@@ -1,0 +1,174 @@
+# Thai translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: th <https://github.com/mainuan>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "จัดการแพ็กเกจบนระบบ"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "ต้องใช้รหัสผ่านผู้ดูแลระบบเพื่อดำเนินการนี้"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "ตัวติดตั้งแพ็กเกจ"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "จัดการและติดตั้งแอปพลิเคชัน Flatpak และ AppImage"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/ไฟล์"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "วิธีใช้: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "ไม่พบไฟล์ {path}"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "ตัวจัดการ AppImage"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "ตัวจัดการ Flatpak"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "ประกาศของระบบ"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "รูปแบบที่ไม่รองรับ"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "รุ่นนี้ไม่รองรับรูปแบบแพ็กเกจที่ตรวจพบ"
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "เข้าใจแล้ว ปิด"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>กำลังตรวจสอบสถานะ...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "การดำเนินการปัจจุบัน: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "ดำเนินการสำเร็จ!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "สำเร็จ"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "การดำเนินการถูกขัดจังหวะหรือเสร็จสิ้นพร้อมข้อผิดพลาด"
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "คำเตือน"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>กำลังติดตั้ง:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "ข้อผิดพลาด"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "การติดตั้งล้มเหลว: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>กำลังเอาออก:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "การเอาออกล้มเหลว: {error}"
+
+# reviewed: 'ติดตั้งแอปพลิเคชันแล้ว' = 'aplicativo instalado' (sucesso);
+# perdia o 'Already'
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "แอปพลิเคชันติดตั้งอยู่แล้ว"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "แพ็กเกจ '{name}' ติดตั้งอยู่ในระบบแล้ว"
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "ต้องการเอาออกหรือไม่?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "ถอนการติดตั้ง"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "ยืนยันการติดตั้ง"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "แพ็กเกจ '{name}' ไม่ได้ติดตั้งอยู่ในระบบ"
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "ต้องการติดตั้งหรือไม่?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "ติดตั้ง"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "คำเตือน: ไม่พบกลุ่ม 'flatpak' ในระบบ"
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "เกิดข้อผิดพลาดขณะตรวจสอบกลุ่ม: {error}"

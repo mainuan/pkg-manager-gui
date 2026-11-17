@@ -1,0 +1,173 @@
+# Finnish translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: fi <https://github.com/mainuan>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "Hallitse järjestelmän paketteja"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "Tämän toimenpiteen suorittaminen vaatii ylläpitäjän salasanan"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "Paketinasennin"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Hallitse ja asenna Flatpak- ja AppImage-sovelluksia"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/tiedosto"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "Käyttö: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "Tiedostoa {path} ei löytynyt"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "AppImage-hallinta"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Flatpak-hallinta"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "Järjestelmäilmoitus"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "Muotoa ei tueta"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "Tämä versio ei tue havaittua pakettimuotoa."
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "Selvä, sulje"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>Tarkistetaan tilaa...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "Nykyinen toiminto: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "Peru"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "Toimenpide suoritettiin onnistuneesti!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "Onnistui"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "Toimenpide keskeytyi tai päättyi virheisiin."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Varoitus"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>Asennetaan:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "Virhe"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Asennus epäonnistui: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>Poistetaan:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "Poisto epäonnistui: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "Sovellus on jo asennettu"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "Paketti '{name}' on jo asennettu järjestelmään."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "Haluatko poistaa sen?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "Poista asennus"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "Vahvista asennus"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "Pakettia '{name}' ei ole asennettu järjestelmään."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "Haluatko asentaa sen?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "Asenna"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "Varoitus: järjestelmästä ei löytynyt flatpak-ryhmää."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "Ryhmän tarkistuksessa tapahtui virhe: {error}"

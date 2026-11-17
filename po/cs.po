@@ -1,0 +1,173 @@
+# Czech translations for pkg-manager-gui package.
+# Copyright (C) 2026 Mainuan
+# This file is distributed under the same license as the pkg-manager-gui package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pkg-manager-gui\n"
+"Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
+"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"PO-Revision-Date: 2026-11-16 11:17-0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: cs <https://github.com/mainuan>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:11
+msgid "Manage packages on the system"
+msgstr "Správa balíčků v systému"
+
+#: br.com.aratie.appimagemanagerbackend.policy.in:12
+msgid "The administrator password is required to perform this operation"
+msgstr "K provedení této operace je vyžadováno heslo správce"
+
+#: pkg-manager-gui.desktop.in:2
+msgid "PKG Manager"
+msgstr "PKG Manager"
+
+#: pkg-manager-gui.desktop.in:3
+msgid "Package Installer"
+msgstr "Instalátor balíčků"
+
+#: pkg-manager-gui.desktop.in:4
+msgid "Manage and install Flatpak and AppImage applications"
+msgstr "Správa a instalace aplikací Flatpak a AppImage"
+
+#. Translators: placeholder for the command-line argument in the usage line.
+#: src/main.py:11
+msgid "url/file"
+msgstr "url/soubor"
+
+#: src/main.py:12
+#, python-brace-format
+msgid "Usage: {command}"
+msgstr "Použití: {command}"
+
+#: src/service/appimage_service.py:22 src/service/flatpak_service.py:22
+#, python-brace-format
+msgid "File {path} not found"
+msgstr "Soubor {path} nenalezen"
+
+#: src/ui/appimage_manager.py:9
+msgid "AppImage Manager"
+msgstr "Správce AppImage"
+
+#: src/ui/flatpak_manager.py:10
+msgid "Flatpak Manager"
+msgstr "Správce Flatpaku"
+
+#: src/ui/notfound_manager.py:10
+msgid "System Notice"
+msgstr "Systémové oznámení"
+
+#: src/ui/notfound_manager.py:37
+msgid "Unsupported Format"
+msgstr "Nepodporovaný formát"
+
+#: src/ui/notfound_manager.py:44
+msgid "The detected package format is not supported by this version."
+msgstr "Zjištěný formát balíčku tato verze nepodporuje."
+
+#: src/ui/notfound_manager.py:53
+msgid "Got it, close"
+msgstr "Rozumím, zavřít"
+
+#: src/ui/pkg_manager.py:34
+msgid "<b>Checking status...</b>"
+msgstr "<b>Kontroluje se stav...</b>"
+
+#. Translators: progress bar text; %p is replaced by Qt with the percentage.
+#: src/ui/pkg_manager.py:41
+msgid "Current action: %p%"
+msgstr "Aktuální akce: %p%"
+
+#: src/ui/pkg_manager.py:47 src/ui/pkg_manager.py:108 src/ui/pkg_manager.py:124
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/ui/pkg_manager.py:67
+msgid "Operation completed successfully!"
+msgstr "Operace byla úspěšně dokončena!"
+
+#: src/ui/pkg_manager.py:67
+msgid "Success"
+msgstr "Úspěch"
+
+#: src/ui/pkg_manager.py:70
+msgid "The operation was interrupted or finished with errors."
+msgstr "Operace byla přerušena nebo skončila s chybami."
+
+#: src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Varování"
+
+#: src/ui/pkg_manager.py:78
+#, python-brace-format
+msgid "<b>Installing:</b> {name}"
+msgstr "<b>Instaluje se:</b> {name}"
+
+#: src/ui/pkg_manager.py:82 src/ui/pkg_manager.py:95
+msgid "Error"
+msgstr "Chyba"
+
+#: src/ui/pkg_manager.py:83
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Instalace selhala: {error}"
+
+#: src/ui/pkg_manager.py:91
+#, python-brace-format
+msgid "<b>Removing:</b> {name}"
+msgstr "<b>Odebírá se:</b> {name}"
+
+#: src/ui/pkg_manager.py:96
+#, python-brace-format
+msgid "Removal failed: {error}"
+msgstr "Odebrání selhalo: {error}"
+
+#: src/ui/pkg_manager.py:102
+msgid "Application Already Installed"
+msgstr "Aplikace je již nainstalována"
+
+#: src/ui/pkg_manager.py:104
+#, python-brace-format
+msgid "The package '{name}' is already installed on the system."
+msgstr "Balíček '{name}' je již v systému nainstalován."
+
+#: src/ui/pkg_manager.py:105
+msgid "Do you want to remove it?"
+msgstr "Chcete jej odebrat?"
+
+#: src/ui/pkg_manager.py:107
+msgid "Uninstall"
+msgstr "Odinstalovat"
+
+#: src/ui/pkg_manager.py:118
+msgid "Confirm Installation"
+msgstr "Potvrdit instalaci"
+
+#: src/ui/pkg_manager.py:120
+#, python-brace-format
+msgid "The package '{name}' is not installed on the system."
+msgstr "Balíček '{name}' není v systému nainstalován."
+
+#: src/ui/pkg_manager.py:121
+msgid "Do you want to install it?"
+msgstr "Chcete jej nainstalovat?"
+
+#: src/ui/pkg_manager.py:123
+msgid "Install"
+msgstr "Instalovat"
+
+#: src/utils/grp_utils.py:19
+msgid "Warning: the 'flatpak' group was not found on the system."
+msgstr "Varování: skupina 'flatpak' nebyla v systému nalezena."
+
+#: src/utils/grp_utils.py:22
+#, python-brace-format
+msgid "An error occurred while checking the group: {error}"
+msgstr "Při kontrole skupiny došlo k chybě: {error}"

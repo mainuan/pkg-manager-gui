@@ -169,8 +169,10 @@ class I18nTest(unittest.TestCase):
     def test_right_to_left_catalog_mirrors_without_qtbase(self):
         # The application's Arabic catalog is used: mirrored even without qtbase_ar.
         self.assertTrue(self.direction("ar").startswith("RightToLeft True "))
-        # Urdu is right-to-left but has no application catalog: English, left to right.
-        self.assertTrue(self.direction("ur").startswith("LeftToRight False "))
+        # Urdu has an application catalog but no qtbase_ur: mirrored by the catalog.
+        self.assertTrue(self.direction("ur").startswith("RightToLeft True "))
+        # Yiddish is right-to-left but has no application catalog: English, left to right.
+        self.assertTrue(self.direction("yi").startswith("LeftToRight False "))
 
 
 if __name__ == "__main__":

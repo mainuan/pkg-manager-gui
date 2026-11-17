@@ -402,7 +402,8 @@ class InstallTest(unittest.TestCase):
         saved = self.tmp / "saved.deb"
         recorder = ("import os, shutil, stat, sys; deb = sys.argv[-1]; "
                     "shutil.copy(deb, sys.argv[1]); "
-                    "print('MODE', oct(stat.S_IMODE(os.stat(os.path.dirname(deb)).st_mode)))")
+                    "open(sys.argv[1] + '.mode', 'w').write("
+                    "oct(stat.S_IMODE(os.stat(os.path.dirname(deb)).st_mode)))")
         self.backend.dpkg = [sys.executable, "-c", recorder, str(saved)]
         code, out = self.run_install(image)
         self.assertEqual(code, 0, out)
@@ -438,9 +439,10 @@ class InstallTest(unittest.TestCase):
         self.assertNotIn("TryExec", desktop)
         self.assertTrue((extracted / "usr/share/pixmaps/fooappimage.png").read_bytes()
                         .startswith(b"\x89PNG"))
-        self.assertIn("MODE 0o700", out)  # diretório temporário privado
+        # diretório temporário privado
+        self.assertEqual(Path(f"{saved}.mode").read_text(), "0o700")
         self.assertEqual(sorted(os.listdir(self.tmp)),
-                         sorted([image.name, "tree", "x.sqfs", "saved.deb", "ex"]))
+                         sorted([image.name, "tree", "x.sqfs", "saved.deb", "saved.deb.mode", "ex"]))
 
     @unittest.skipUnless(have("mksquashfs", "unsquashfs", "dpkg-deb"),
                          "squashfs-tools/dpkg-deb não instalados")

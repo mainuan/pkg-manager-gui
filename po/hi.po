@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkg-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"POT-Creation-Date: 2026-11-17 18:47-0300\n"
 "PO-Revision-Date: 2026-11-16 11:17-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: hi <https://github.com/mainuan>\n"
@@ -51,9 +51,19 @@ msgstr "उपयोग: {command}"
 msgid "File {path} not found"
 msgstr "फ़ाइल {path} नहीं मिली"
 
-#: src/ui/appimage_manager.py:9
+#: src/ui/appimage_manager.py:15
 msgid "AppImage Manager"
 msgstr "AppImage प्रबंधक"
+
+#: src/ui/appimage_manager.py:40 src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "चेतावनी"
+
+#: src/ui/appimage_manager.py:41
+msgid ""
+"This file is not a supported AppImage. Only type 2 AppImages can be "
+"installed; type 1 AppImages and other files are refused."
+msgstr "यह फ़ाइल समर्थित AppImage नहीं है। केवल टाइप 2 के AppImage इंस्टॉल किए जा सकते हैं; टाइप 1 के AppImage और अन्य फ़ाइलें अस्वीकार की जाती हैं।"
 
 #: src/ui/flatpak_manager.py:10
 msgid "Flatpak Manager"
@@ -99,10 +109,6 @@ msgstr "सफलता"
 #: src/ui/pkg_manager.py:70
 msgid "The operation was interrupted or finished with errors."
 msgstr "कार्य बाधित हुआ या त्रुटियों के साथ समाप्त हुआ।"
-
-#: src/ui/pkg_manager.py:70
-msgid "Warning"
-msgstr "चेतावनी"
 
 #: src/ui/pkg_manager.py:78
 #, python-brace-format

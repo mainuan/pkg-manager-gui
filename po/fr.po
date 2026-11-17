@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkg-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"POT-Creation-Date: 2026-11-17 18:47-0300\n"
 "PO-Revision-Date: 2026-11-16 11:17-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: fr <https://github.com/mainuan>\n"
@@ -53,9 +53,19 @@ msgstr "Utilisation : {command}"
 msgid "File {path} not found"
 msgstr "Fichier {path} introuvable"
 
-#: src/ui/appimage_manager.py:9
+#: src/ui/appimage_manager.py:15
 msgid "AppImage Manager"
 msgstr "Gestionnaire d'AppImage"
+
+#: src/ui/appimage_manager.py:40 src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "Avertissement"
+
+#: src/ui/appimage_manager.py:41
+msgid ""
+"This file is not a supported AppImage. Only type 2 AppImages can be "
+"installed; type 1 AppImages and other files are refused."
+msgstr "Ce fichier n’est pas un AppImage pris en charge. Seuls les AppImages de type 2 peuvent être installés ; les AppImages de type 1 et les autres fichiers sont refusés."
 
 #: src/ui/flatpak_manager.py:10
 msgid "Flatpak Manager"
@@ -104,10 +114,6 @@ msgstr "Succès"
 #: src/ui/pkg_manager.py:70
 msgid "The operation was interrupted or finished with errors."
 msgstr "L'opération a été interrompue ou s'est terminée avec des erreurs."
-
-#: src/ui/pkg_manager.py:70
-msgid "Warning"
-msgstr "Avertissement"
 
 #: src/ui/pkg_manager.py:78
 #, python-brace-format

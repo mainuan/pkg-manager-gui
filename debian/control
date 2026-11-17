@@ -11,7 +11,8 @@ Build-Depends: debhelper-compat (= 13),
                python3-pyside6.qtcore,
                python3-pyside6.qtgui,
                python3-pyside6.qtwidgets,
-               qt6-translations-l10n
+               qt6-translations-l10n,
+               squashfs-tools <!nocheck>
 Standards-Version: 4.7.2
 Rules-Requires-Root: no
 Homepage: https://github.com/mainuan/pkg-manager-gui
@@ -27,7 +28,8 @@ Depends: ${misc:Depends},
          python3,
          python3-pyside6.qtcore,
          python3-pyside6.qtgui,
-         python3-pyside6.qtwidgets
+         python3-pyside6.qtwidgets,
+         squashfs-tools
 Recommends: qt6-translations-l10n
 Conflicts: flatpak-manager-gui
 Replaces: flatpak-manager-gui
@@ -37,8 +39,10 @@ Description: graphical installer for Flatpak references and AppImage files
  the progress in a Qt 6 window.
  .
  Flatpak applications are installed with the flatpak command. AppImage
- files are copied to /opt/appimages-installed by a helper that runs as
- root through pkexec, with a menu entry, an icon and a record in the dpkg
- database so that they can be removed later.
+ files (type 2) are copied to /opt/appimages-installed by a helper that
+ runs as root through pkexec, with a menu entry and an icon. The helper
+ never runs the AppImage: it reads the menu entry and the icon from the
+ embedded SquashFS with unsquashfs and records everything in a small
+ Debian package installed with dpkg, so that it can be removed later.
  .
  This package replaces flatpak-manager-gui.

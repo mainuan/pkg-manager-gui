@@ -20,6 +20,7 @@ pkg-manager-gui.desktop.in   modelo do .desktop (Name/GenericName/Comment em ing
 br.com.aratie.appimagemanagerbackend.policy.in   modelo da política polkit
 tests/test_i18n.py           teste automático (pt_BR e en/C)
 tests/test_logic.py          testes da lógica (formato do arquivo, Flatpak instalado, backend)
+tests/test_backend.py        testes do backend de AppImage (offset, recusas, .deb, dpkg --root)
 ```
 
 ## Onde os catálogos são procurados
@@ -51,7 +52,9 @@ testes e um teste de fumaça com o pacote instalado.
 
 * O backend `appimage_manager_backend` (executado como root via `pkexec`, saída
   lida só para extrair a porcentagem) **não** foi traduzido: não é interface e o
-  `pkexec` descarta `LANGUAGE`/`LANG`.
+  `pkexec` descarta `LANGUAGE`/`LANG`. Quando o arquivo não é um AppImage tipo 2,
+  o backend sai com código 3 e a interface mostra a explicação traduzida
+  (`src/ui/appimage_manager.py`).
 * Mensagens de `NotImplementedError` são para desenvolvedores e não foram traduzidas.
 * `PKG Manager`, `AppImage Manager` e `Flatpak Manager` já eram exibidos em inglês;
   o pt_BR os mantém idênticos.

@@ -31,7 +31,10 @@ PyInstaller de 81 MB com Python e PySide6 embutidos, foi substituído
 ## Funcionalidades
 
 - **`.flatpakref`**: instala com `flatpak install`, ou oferece a remoção quando um aplicativo com o mesmo ID (o nome do arquivo sem a extensão) já está instalado. Se o usuário não é root nem membro do grupo `flatpak`, o comando passa pelo `pkexec`.
-- **`.AppImage`**: copia o arquivo para `/opt/appimages-installed`, cria entrada no menu e ícone a partir do `.desktop` do AppImage e registra o aplicativo na base do `dpkg` como o pacote `<nome>appimage`, para poder removê-lo depois; ou remove esse pacote se ele já existir. O trabalho é feito pelo backend `/usr/libexec/pkg-manager-gui/appimage_manager_backend`, via `pkexec` (ação polkit `br.com.aratie.appimagemanager.pkexec`, com senha de administrador).
+- **`.AppImage`** (tipo 2): copia o arquivo para `/opt/appimages-installed`, cria entrada no menu e ícone a partir do `.desktop` do AppImage e registra o aplicativo na base do `dpkg` como o pacote `<nome>appimage`, para poder removê-lo depois; ou remove esse pacote (`dpkg -r`) se ele já existir. O trabalho é feito pelo backend `/usr/libexec/pkg-manager-gui/appimage_manager_backend`, via `pkexec` (ação polkit `br.com.aratie.appimagemanager.pkexec`, com senha de administrador).
+  - O AppImage **nunca é executado**: o backend copia o arquivo para um diretório temporário privado do root (lido com as permissões de quem pediu a instalação), calcula o deslocamento do SquashFS pelo cabeçalho ELF (`e_shoff + e_shentsize × e_shnum`, como `appimagetool --appimage-offset`), confere a assinatura `hsqs` e extrai só o `.desktop` e o `.DirIcon` com `unsquashfs -o <deslocamento>`. Links simbólicos que saem da imagem são ignorados.
+  - O registro é um pacote `.deb` de verdade, gerado com `dpkg-deb --build` e instalado com `dpkg -i`: o `dpkg` respeita a trava da sua base e registra todos os arquivos (binário, `.desktop` e ícones), que o `dpkg -r` remove por completo.
+  - AppImages do tipo 1 e outros arquivos são recusados com uma mensagem que explica o motivo.
 - Pergunta antes de instalar ou remover; acompanha a saída do processo (`QProcess`) e mostra a porcentagem numa barra de progresso; informa o resultado numa caixa de mensagem.
 - Outros arquivos recebem um aviso de formato não suportado.
 - Interface, `.desktop` e política polkit traduzidos em 33 idiomas.
@@ -46,7 +49,7 @@ confira e instale:
 
 ```bash
 sha256sum --check --ignore-missing SHA256SUMS
-sudo apt install ./pkg-manager-gui_1.1.0_all.deb
+sudo apt install ./pkg-manager-gui_1.1.1_all.deb
 ```
 
 ## Uso
@@ -71,7 +74,7 @@ O comando recebe um arquivo; sem argumento, mostra
 | Toolkit | Qt 6 (PySide6 do Ubuntu: `python3-pyside6.qtcore`, `.qtgui`, `.qtwidgets`) |
 | Base | Kubuntu 26.04 LTS, KDE Plasma 6.6 |
 | Pacote | `pkg-manager-gui`, `Architecture: all`, cerca de 36 KB |
-| Dependências | `flatpak`, `pkexec`, `python3`, `desktop-file-utils`; recomenda `qt6-translations-l10n` |
+| Dependências | `flatpak`, `pkexec`, `python3`, `desktop-file-utils`, `squashfs-tools`; recomenda `qt6-translations-l10n` |
 | Privilégios | `pkexec` para o backend de AppImage e para o Flatpak de sistema |
 | Arquitetura do sistema | amd64 |
 | Arquivos instalados | `/usr/bin/pkg-manager-gui`, `/usr/share/pkg-manager-gui/`, `/usr/libexec/pkg-manager-gui/appimage_manager_backend`, `.desktop`, política polkit, catálogos e página de manual |
@@ -86,12 +89,18 @@ dpkg-buildpackage -us -uc -b      # gera ../pkg-manager-gui_<versão>_all.deb
 ```
 
 A versão vem de `debian/changelog`. Durante o build, o `debian/rules` executa
-`tests/test_logic.py`, `tests/test_i18n.py`, `desktop-file-validate` no
+`tests/test_logic.py`, `tests/test_backend.py`, `tests/test_i18n.py`, `desktop-file-validate` no
 `.desktop` gerado e `xmllint` na política polkit. Antes dele, o CI executa:
 
 ```bash
-po/i18n.sh check-pot && po/i18n.sh validate && python3 tests/test_logic.py
+po/i18n.sh check-pot && po/i18n.sh validate && python3 tests/test_logic.py && python3 tests/test_backend.py
 ```
+
+`tests/test_backend.py` não precisa de root: monta um AppImage sintético
+(cabeçalho ELF + SquashFS feito com `mksquashfs`), testa o cálculo do
+deslocamento e as recusas, gera o `.deb` e instala e remove o pacote com
+`dpkg --force-not-root --root=<diretório temporário>`. Sem `squashfs-tools` ou
+`dpkg`, só essas etapas são puladas.
 
 O workflow [`CI`](.github/workflows/ci.yml) usa o pipeline Debian comum da
 organização: build num contêiner Ubuntu 26.04 fixado por digest, `lintian`,

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkg-manager-gui\n"
 "Report-Msgid-Bugs-To: https://github.com/aratie-os/pkg-manager-gui/issues\n"
-"POT-Creation-Date: 2026-11-16 11:17-0300\n"
+"POT-Creation-Date: 2026-11-17 18:47-0300\n"
 "PO-Revision-Date: 2026-11-16 11:17-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: bn <https://github.com/mainuan>\n"
@@ -51,9 +51,19 @@ msgstr "ব্যবহার: {command}"
 msgid "File {path} not found"
 msgstr "{path} ফাইলটি পাওয়া যায়নি"
 
-#: src/ui/appimage_manager.py:9
+#: src/ui/appimage_manager.py:15
 msgid "AppImage Manager"
 msgstr "AppImage ম্যানেজার"
+
+#: src/ui/appimage_manager.py:40 src/ui/pkg_manager.py:70
+msgid "Warning"
+msgstr "সতর্কতা"
+
+#: src/ui/appimage_manager.py:41
+msgid ""
+"This file is not a supported AppImage. Only type 2 AppImages can be "
+"installed; type 1 AppImages and other files are refused."
+msgstr "এই ফাইলটি সমর্থিত AppImage নয়। শুধুমাত্র টাইপ 2 AppImage ইনস্টল করা যায়; টাইপ 1 AppImage ও অন্যান্য ফাইল প্রত্যাখ্যান করা হয়।"
 
 #: src/ui/flatpak_manager.py:10
 msgid "Flatpak Manager"
@@ -99,10 +109,6 @@ msgstr "সফল"
 #: src/ui/pkg_manager.py:70
 msgid "The operation was interrupted or finished with errors."
 msgstr "প্রক্রিয়াটি বাধাগ্রস্ত হয়েছে বা ত্রুটিসহ শেষ হয়েছে।"
-
-#: src/ui/pkg_manager.py:70
-msgid "Warning"
-msgstr "সতর্কতা"
 
 #: src/ui/pkg_manager.py:78
 #, python-brace-format

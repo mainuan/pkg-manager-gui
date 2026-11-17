@@ -1,124 +1,372 @@
 #!/usr/bin/env python3
-import os
-import sys
-import shutil
+"""Backend privilegiado (pkexec) do pkg-manager-gui para AppImages.
+
+  appimage_manager_backend -i <arquivo>.AppImage   instala
+  appimage_manager_backend -r <arquivo>.AppImage   remove o pacote <nome>appimage
+
+Segurança da instalação:
+* o AppImage NUNCA é executado: só AppImages do tipo 2 (runtime ELF seguido de
+  um SquashFS) são aceitos; o deslocamento do SquashFS é calculado a partir do
+  cabeçalho ELF (e_shoff + e_shentsize * e_shnum, como
+  ``appimagetool --appimage-offset``) e o .desktop e o ícone são extraídos com
+  ``unsquashfs -o <deslocamento>``;
+* o arquivo é aberto com as permissões de quem pediu a instalação
+  (``PKEXEC_UID``) e copiado para um diretório temporário privado do root
+  (0700); todas as verificações e a instalação usam essa cópia;
+* o registro no dpkg é um pacote .deb de verdade (``dpkg-deb --build``)
+  instalado com ``dpkg -i``, que respeita a trava da base do dpkg e registra
+  todos os arquivos (binário, .desktop e ícones), removidos por ``dpkg -r``.
+
+Códigos de saída: 0 sucesso, 1 erro, 3 arquivo que não é um AppImage tipo 2.
+"""
 import hashlib
+import os
+import pwd
 import re
+import stat
+import struct
 import subprocess
+import sys
 import tempfile
+import unicodedata
 from pathlib import Path
+
+EXIT_ERROR = 1
+EXIT_UNSUPPORTED = 3
+
+SQUASHFS_MAGIC = b"hsqs"
+SQUASHFS_SUPERBLOCK_SIZE = 96
+# e_machine -> arquitetura Debian
+ELF_ARCHITECTURES = {62: "amd64", 183: "arm64", 3: "i386", 40: "armhf"}
+MAX_DESKTOP_SIZE = 1024 * 1024
+MAX_ICON_SIZE = 10 * 1024 * 1024
+SAFE_PATH = "/usr/sbin:/usr/bin:/sbin:/bin"
+PACKAGE_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]+$")
+VERSION_RE = re.compile(r"^[0-9][A-Za-z0-9.+~]*-[A-Za-z0-9.+~]+$")
+
+
+class UnsupportedAppImage(Exception):
+    """O arquivo não é um AppImage tipo 2 válido (código de saída 3)."""
+
+
+def appimage_info(header: bytes, file_size: int) -> tuple[int, str]:
+    """Valida o cabeçalho ELF de um AppImage tipo 2 e devolve
+    (deslocamento do SquashFS, arquitetura Debian).
+
+    O deslocamento é o fim da tabela de seções do runtime ELF:
+    e_shoff + e_shentsize * e_shnum.
+    """
+    if len(header) < 16 or header[:4] != b"\x7fELF":
+        raise UnsupportedAppImage("o arquivo não é um executável ELF")
+    if header[8:10] == b"AI" and header[10] == 1:
+        raise UnsupportedAppImage("AppImages do tipo 1 (ISO 9660) não são suportados")
+    if header[8:11] != b"AI\x02":
+        raise UnsupportedAppImage("assinatura de AppImage tipo 2 (AI\\x02) ausente")
+
+    elf_class, data = header[4], header[5]
+    if data == 1:
+        endian = "<"
+    elif data == 2:
+        endian = ">"
+    else:
+        raise UnsupportedAppImage("codificação ELF inválida")
+    if elf_class == 1:
+        header_size, shoff_fmt, shoff_at, shentsize_at = 52, "I", 32, 46
+    elif elf_class == 2:
+        header_size, shoff_fmt, shoff_at, shentsize_at = 64, "Q", 40, 58
+    else:
+        raise UnsupportedAppImage("classe ELF inválida")
+    if len(header) < header_size:
+        raise UnsupportedAppImage("cabeçalho ELF truncado")
+
+    machine = struct.unpack_from(endian + "H", header, 18)[0]
+    (shoff,) = struct.unpack_from(endian + shoff_fmt, header, shoff_at)
+    shentsize, shnum = struct.unpack_from(endian + "HH", header, shentsize_at)
+    offset = shoff + shentsize * shnum
+    if offset < header_size or offset + SQUASHFS_SUPERBLOCK_SIZE > file_size:
+        raise UnsupportedAppImage(f"deslocamento do SquashFS fora do arquivo ({offset})")
+    architecture = ELF_ARCHITECTURES.get(machine) if endian == "<" else None
+    if architecture is None:
+        raise UnsupportedAppImage(f"arquitetura ELF não suportada (e_machine {machine})")
+    return offset, architecture
+
+
+def check_squashfs(superblock: bytes, offset: int, file_size: int) -> None:
+    """Confere o superbloco SquashFS 4.x (little-endian) no deslocamento."""
+    if len(superblock) < SQUASHFS_SUPERBLOCK_SIZE or superblock[:4] != SQUASHFS_MAGIC:
+        raise UnsupportedAppImage(f"SquashFS (hsqs) não encontrado no deslocamento {offset}")
+    major = struct.unpack_from("<H", superblock, 28)[0]
+    bytes_used = struct.unpack_from("<Q", superblock, 40)[0]
+    if major != 4:
+        raise UnsupportedAppImage(f"versão de SquashFS não suportada ({major})")
+    if bytes_used < SQUASHFS_SUPERBLOCK_SIZE or offset + bytes_used > file_size:
+        raise UnsupportedAppImage("SquashFS truncado")
+
+
+def inspect_appimage(image: Path) -> tuple[int, str]:
+    """Valida o arquivo (já copiado) e devolve (deslocamento, arquitetura)."""
+    with open(image, "rb") as fh:
+        size = os.fstat(fh.fileno()).st_size
+        header = fh.read(64)
+        offset, architecture = appimage_info(header, size)
+        fh.seek(offset)
+        check_squashfs(fh.read(SQUASHFS_SUPERBLOCK_SIZE), offset, size)
+    return offset, architecture
+
+
+def clean_field(value: str, limit: int = 120) -> str:
+    """Texto de uma linha para o control: sem caracteres de controle."""
+    value = "".join(" " if unicodedata.category(c)[0] == "C" else c for c in value)
+    return " ".join(value.split())[:limit]
+
+
+def deb_control(pkg_name: str, version: str, architecture: str, app_name: str,
+                installed_size_kib: int) -> str:
+    """Arquivo DEBIAN/control do pacote que registra o AppImage."""
+    if not PACKAGE_NAME_RE.match(pkg_name):
+        raise ValueError(f"nome de pacote inválido: {pkg_name!r}")
+    if not VERSION_RE.match(version):
+        raise ValueError(f"versão inválida: {version!r}")
+    if architecture not in ELF_ARCHITECTURES.values():
+        raise ValueError(f"arquitetura inválida: {architecture!r}")
+    summary = clean_field(app_name) or pkg_name
+    return (f"Package: {pkg_name}\n"
+            f"Version: {version}\n"
+            f"Architecture: {architecture}\n"
+            f"Maintainer: AppImageManager <root@localhost>\n"
+            f"Installed-Size: {max(int(installed_size_kib), 1)}\n"
+            f"Section: misc\n"
+            f"Priority: optional\n"
+            f"Description: {summary} via AppImage\n"
+            f" AppImage installed by pkg-manager-gui.\n")
+
+
+def read_inside(root: Path, name: str, limit: int) -> bytes | None:
+    """Lê root/name seguindo links simbólicos só dentro de root; None se o
+    arquivo não existe, sai de root, não é regular ou passa de limit bytes."""
+    real_root = os.path.realpath(root)
+    real = os.path.realpath(os.path.join(root, name))
+    if os.path.commonpath([real_root, real]) != real_root or real == real_root:
+        return None
+    try:
+        fd = os.open(real, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+    except OSError:
+        return None
+    if not stat.S_ISREG(os.fstat(fd).st_mode):
+        os.close(fd)
+        return None
+    with os.fdopen(fd, "rb") as fh:
+        data = fh.read(limit + 1)
+    return data if len(data) <= limit else None
+
 
 class AppImageBackend:
     def __init__(self):
         self.opt_dir = Path("/opt/appimages-installed")
         self.apps_dir = Path("/usr/share/applications")
         self.icons_dir = Path("/usr/share/icons/hicolor/128x128/apps")
-        self.dpkg_status = Path("/var/lib/dpkg/status")
-        self.dpkg_info = Path("/var/lib/dpkg/info")
+        self.pixmaps_dir = Path("/usr/share/pixmaps")
+        # Disco, não tmpfs: a cópia do AppImage pode ter centenas de MB.
+        self.tmp_parent = "/var/tmp"
+        self.dpkg = ["dpkg"]
+        self.update_desktop_database = ["update-desktop-database"]
 
     def _sanitize(self, name: str) -> str:
         name = Path(name).stem.replace(
             ".AppImage", "").replace("-x86_64", "").split("-")[0]
-        
+
         replacements = {'á': 'a', 'à': 'a', 'ã': 'a', 'â': 'a', 'é': 'e',
                         'ê': 'e', 'í': 'i', 'ó': 'o', 'õ': 'o', 'ô': 'o', 'ú': 'u', 'ç': 'c'}
-        
+
         for char, rep in replacements.items():
             name = name.replace(char, rep)
-        
+
         name = name.strip().replace(" ", "-").lower()
         return re.sub(r'[^a-z0-9.-]', '', name)
+
+    @staticmethod
+    def _env():
+        return {"PATH": SAFE_PATH, "LC_ALL": "C.UTF-8"}
+
+    @staticmethod
+    def _open_as_caller(path: Path) -> int:
+        """Abre o arquivo com as permissões de quem chamou o pkexec: um link
+        para um arquivo que só o root lê não é aceito. O_NONBLOCK evita travar
+        num FIFO; o tipo é conferido com fstat depois de aberto."""
+        flags = os.O_RDONLY | os.O_NOCTTY | os.O_NONBLOCK | os.O_CLOEXEC
+        caller = os.environ.get("PKEXEC_UID")
+        if os.geteuid() != 0 or not caller:
+            return os.open(path, flags)
+        try:
+            user = pwd.getpwuid(int(caller))
+        except (KeyError, ValueError) as e:
+            raise PermissionError(f"PKEXEC_UID inválido: {caller!r}") from e
+        saved_groups = os.getgroups()
+        os.setgroups(os.getgrouplist(user.pw_name, user.pw_gid))
+        os.setegid(user.pw_gid)
+        os.seteuid(user.pw_uid)
+        try:
+            return os.open(path, flags)
+        finally:
+            os.seteuid(0)
+            os.setegid(0)
+            os.setgroups(saved_groups)
+
+    def _copy_private(self, source: Path, dest: Path) -> str:
+        """Copia o AppImage para dest (0600, root) e devolve o MD5 da cópia."""
+        md5 = hashlib.md5(usedforsecurity=False)
+        with os.fdopen(self._open_as_caller(source), "rb") as src:
+            if not stat.S_ISREG(os.fstat(src.fileno()).st_mode):
+                raise UnsupportedAppImage(f"{source} não é um arquivo regular")
+            out_fd = os.open(dest, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+                             | os.O_CLOEXEC, 0o600)
+            with os.fdopen(out_fd, "wb") as out:
+                for chunk in iter(lambda: src.read(1024 * 1024), b""):
+                    md5.update(chunk)
+                    out.write(chunk)
+        return md5.hexdigest()
+
+    def _extract_metadata(self, image: Path, offset: int, dest: Path) -> Path:
+        """Extrai só os .desktop da raiz e o .DirIcon (e os alvos dos seus
+        links simbólicos) sem executar o AppImage."""
+        cmd = ["unsquashfs", "-no-progress", "-no-xattrs",
+               "-follow-symlinks", "-missing-symlinks",
+               "-o", str(offset), "-d", str(dest), str(image), "*.desktop", ".DirIcon"]
+        result = subprocess.run(cmd, capture_output=True, text=True, env=self._env(), timeout=120, check=False)
+        if result.returncode != 0 or not dest.is_dir():
+            raise RuntimeError(f"unsquashfs falhou (código {result.returncode}): "
+                               f"{(result.stderr or result.stdout).strip()}")
+        return dest
+
+    @staticmethod
+    def _place(root: Path, target: Path) -> Path:
+        path = root / target.relative_to("/")
+        path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+        return path
+
+    def _build_deb(self, work: Path, image: Path, file_hash: str, pkg_name: str,
+                   architecture: str, app_name: str, desktop: str,
+                   icon: bytes | None) -> Path:
+        root = work / "pkg"
+        root.mkdir(mode=0o755)
+        dest_bin = self.opt_dir / file_hash
+        binary = self._place(root, dest_bin)
+        os.replace(image, binary)
+        binary.chmod(0o755)
+        files = [binary]
+        contents = {self.apps_dir / f"{pkg_name}.desktop": desktop.encode()}
+        if icon is not None:
+            contents[self.icons_dir / f"{pkg_name}.png"] = icon
+            contents[self.pixmaps_dir / f"{pkg_name}.png"] = icon
+        for target, data in contents.items():
+            path = self._place(root, target)
+            path.write_bytes(data)
+            path.chmod(0o644)
+            files.append(path)
+        size_kib = sum((f.stat().st_size + 1023) // 1024 for f in files)
+        control_dir = root / "DEBIAN"
+        control_dir.mkdir(mode=0o755)
+        control = control_dir / "control"
+        control.write_text(deb_control(pkg_name, f"1.0-{file_hash[:6]}", architecture,
+                                       app_name, size_kib), encoding="utf-8")
+        control.chmod(0o644)
+        deb = work / f"{pkg_name}.deb"
+        result = subprocess.run(["dpkg-deb", "--root-owner-group", "-Znone", "--build",
+                                 str(root), str(deb)],
+                                capture_output=True, text=True, env=self._env(), check=False)
+        if result.returncode != 0:
+            raise RuntimeError(f"dpkg-deb falhou (código {result.returncode}): "
+                               f"{(result.stderr or result.stdout).strip()}")
+        return deb
+
+    def _rewrite_desktop(self, content: str, dest_bin: Path, pkg_name: str) -> str:
+        new_content = []
+        for line in content.splitlines():
+            if line.startswith("Exec="):
+                new_content.append(f"Exec={dest_bin}")
+            elif line.startswith("Icon="):
+                new_content.append(f"Icon={pkg_name}")
+            elif line.startswith("TryExec="):
+                continue
+            else:
+                new_content.append(line)
+        return "\n".join(new_content) + "\n"
 
     def install(self, appimage_path: str):
         path = Path(appimage_path).resolve()
         if not path.exists():
             print(f"Erro: {path} não encontrado.")
-            sys.exit(1)
+            sys.exit(EXIT_ERROR)
 
-        path.chmod(path.stat().st_mode | 0o111)
+        pkg_name = self._sanitize(appimage_path) + "appimage"
+        if not PACKAGE_NAME_RE.match(pkg_name):
+            print(f"Erro: não foi possível derivar um nome de pacote válido de {path.name}.")
+            sys.exit(EXIT_ERROR)
 
-        with tempfile.TemporaryDirectory(prefix="ai_install_") as tmp:
-            working_dir = Path(tmp)
-            
-            print(f"Extraindo {path.name}...")
-            
-            try:
-                subprocess.run(
-                    [str(path), "--appimage-extract"],
-                    cwd=working_dir,
-                    capture_output=True,
-                    check=True,
-                    timeout=30
-                )
-            except subprocess.CalledProcessError as e:
-                print(f"Erro ao extrair AppImage: {e}")
-                sys.exit(1)
+        old_umask = os.umask(0o022)
+        try:
+            with tempfile.TemporaryDirectory(prefix="ai_install_", dir=self.tmp_parent) as tmp:
+                work = Path(tmp)
+                image = work / "image"
+                print(f"Extraindo {path.name}...")
+                try:
+                    file_hash = self._copy_private(path, image)
+                    offset, architecture = inspect_appimage(image)
+                except UnsupportedAppImage as e:
+                    print(f"Erro: {path.name} não é um AppImage tipo 2 suportado: {e}.")
+                    sys.exit(EXIT_UNSUPPORTED)
+                except OSError as e:
+                    print(f"Erro ao ler {path}: {e}")
+                    sys.exit(EXIT_ERROR)
 
-            extract_path = working_dir / "squashfs-root"
-            
-            desktop_file = next(extract_path.glob("*.desktop"), None)
-            if not desktop_file:
-                print("Erro: Arquivo .desktop não encontrado dentro do AppImage.")
-                sys.exit(1)
+                try:
+                    extract_path = self._extract_metadata(image, offset, work / "squashfs-root")
+                except (RuntimeError, OSError, subprocess.TimeoutExpired) as e:
+                    print(f"Erro ao extrair AppImage: {e}")
+                    sys.exit(EXIT_ERROR)
 
-            content = desktop_file.read_text(errors="ignore")
-            app_name = (re.search(r'^Name=(.*)', content, re.M) or [None, "App"])[1].strip()
-            pkg_name = self._sanitize(appimage_path) + "appimage"
-            file_hash = hashlib.md5(path.read_bytes()).hexdigest()
-            
-            for d in [self.opt_dir, self.apps_dir, self.icons_dir, self.dpkg_info]:
-                d.mkdir(parents=True, exist_ok=True)
+                content = None
+                for desktop_file in sorted(extract_path.glob("*.desktop")):
+                    data = read_inside(extract_path, desktop_file.name, MAX_DESKTOP_SIZE)
+                    if data is not None:
+                        content = data.decode("utf-8", errors="ignore")
+                        break
+                if content is None:
+                    print("Erro: Arquivo .desktop não encontrado dentro do AppImage.")
+                    sys.exit(EXIT_ERROR)
 
-            dest_bin = self.opt_dir / file_hash
-            shutil.copy2(path, dest_bin)
-            dest_bin.chmod(0o755)
+                app_name = (re.search(r'^Name=(.*)', content, re.M) or [None, "App"])[1].strip()
+                icon = read_inside(extract_path, ".DirIcon", MAX_ICON_SIZE)
+                desktop = self._rewrite_desktop(content, self.opt_dir / file_hash, pkg_name)
 
-            icon_src = extract_path / ".DirIcon"
-            if icon_src.exists():
-                shutil.copy2(icon_src, self.icons_dir / f"{pkg_name}.png")
-                shutil.copy2(icon_src, Path("/usr/share/pixmaps") / f"{pkg_name}.png")
+                try:
+                    deb = self._build_deb(work, image, file_hash, pkg_name, architecture,
+                                          app_name, desktop, icon)
+                except (RuntimeError, ValueError, OSError) as e:
+                    print(f"Erro ao gerar o pacote {pkg_name}: {e}")
+                    sys.exit(EXIT_ERROR)
 
-            new_content = []
-            for line in content.splitlines():
-                if line.startswith("Exec="):
-                    new_content.append(f"Exec={dest_bin}")
-                elif line.startswith("Icon="):
-                    new_content.append(f"Icon={pkg_name}")
-                elif line.startswith("TryExec="):
-                    continue
-                else:
-                    new_content.append(line)
-            
-            (self.apps_dir / f"{pkg_name}.desktop").write_text("\n".join(new_content))
+                sys.stdout.flush()
+                result = subprocess.run(self.dpkg + ["-i", str(deb)], env=self._env(), check=False)
+                if result.returncode != 0:
+                    print(f"Erro: dpkg não instalou {pkg_name} (código {result.returncode}).")
+                    sys.exit(EXIT_ERROR)
+        finally:
+            os.umask(old_umask)
 
-            self._register_in_dpkg(pkg_name, app_name, file_hash, dest_bin)
-
-            print(f"Sucesso: {app_name} instalado via AppImage com o package ${pkg_name}.")
-
-    def _register_in_dpkg(self, pkg_name, app_name, file_hash, dest_bin):
-        (self.dpkg_info / f"{pkg_name}.list").write_text(f"{dest_bin}\n{self.apps_dir}/{pkg_name}.desktop\n")
-        
-        status_text = self.dpkg_status.read_text()
-        if f"Package: {pkg_name}" not in status_text:
-            with open(self.dpkg_status, "a") as f:
-                f.write(f"\nPackage: {pkg_name}\n"
-                        f"Status: install ok installed\n"
-                        f"Architecture: amd64\n"
-                        f"Version: 1.0-{file_hash[:6]}\n"
-                        f"Maintainer: AppImageManager\n"
-                        f"Description: {app_name} via AppImage\n")
+        print(f"Sucesso: {app_name} instalado via AppImage com o pacote {pkg_name}.")
 
     def uninstall(self, pkg_name: str):
         pkg_name = self._sanitize(pkg_name)
         if not pkg_name.endswith("appimage"):
             pkg_name += "appimage"
-            
-        result = subprocess.run(["dpkg", "-r", pkg_name])
+
+        result = subprocess.run(self.dpkg + ["-r", pkg_name], check=False)
         if result.returncode != 0:
             print(f"Erro: dpkg não removeu {pkg_name} (código {result.returncode}).")
-            sys.exit(1)
-        subprocess.run(["update-desktop-database"])
-        
+            sys.exit(EXIT_ERROR)
+        subprocess.run(self.update_desktop_database, check=False)
+
         print(f"Sucesso: {pkg_name} removido.")
 
 if __name__ == "__main__":
@@ -129,11 +377,11 @@ if __name__ == "__main__":
     backend = AppImageBackend()
     if len(sys.argv) < 3: sys.exit(1)
     target = sys.argv[-1]
-    
+
     if not target.lower().endswith(".appimage"):
         print(f"O alvo informado {target} não possui a extensão valida.")
         sys.exit(1)
-    
+
     if sys.argv[1] == "-i": backend.install(sys.argv[-1])
     elif sys.argv[1] == "-r": backend.uninstall(sys.argv[-1])
     else:

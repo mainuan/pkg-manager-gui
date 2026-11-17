@@ -112,6 +112,26 @@ class BackendTest(unittest.TestCase):
         self.assertNotIn("Sucesso", out)
 
 
+class UnsupportedAppImageTest(unittest.TestCase):
+    def test_backend_exit_code_shows_the_reason(self):
+        # O backend sai com 3 para um arquivo que não é AppImage tipo 2; a
+        # interface explica o motivo em vez do aviso genérico.
+        try:
+            from ui import appimage_manager
+        except ImportError as e:
+            self.skipTest(f"PySide6 não disponível: {e}")
+        self.assertEqual(appimage_manager.EXIT_UNSUPPORTED, load_backend().EXIT_UNSUPPORTED)
+        window = mock.Mock(spec=appimage_manager.AppImageManager)
+        with mock.patch.object(appimage_manager.QMessageBox, "warning") as warning, \
+                mock.patch.object(appimage_manager.PkgManager, "on_finished") as generic:
+            appimage_manager.AppImageManager.on_finished(window, 3)
+            self.assertIn("type 2", warning.call_args.args[2])
+            window.close.assert_called_once()
+            generic.assert_not_called()
+            appimage_manager.AppImageManager.on_finished(window, 1)
+            generic.assert_called_once_with(1)
+
+
 class PolicyPathTest(unittest.TestCase):
     def test_service_and_policy_use_the_same_backend_path(self):
         try:

@@ -27,7 +27,7 @@ replaces the former 81 MB PyInstaller-based `flatpak-manager-gui`.
 ## Features
 
 - **`.flatpakref`**: installed with `flatpak install`, or removed when an application with the same ID (file name without extension) is already installed; runs through `pkexec` unless the user is root or in the `flatpak` group.
-- **`.AppImage`**: copied to `/opt/appimages-installed` with a menu entry and icon, and recorded in the dpkg database as package `<name>appimage` so it can be removed later. Done by `/usr/libexec/pkg-manager-gui/appimage_manager_backend` through `pkexec` (polkit action `br.com.aratie.appimagemanager.pkexec`, admin authentication).
+- **`.AppImage`** (type 2): copied to `/opt/appimages-installed` with a menu entry and icon, and recorded in the dpkg database as package `<name>appimage` so it can be removed later. The AppImage is never run: the backend copies it to a private root-owned directory, finds the SquashFS offset from the ELF header, checks the `hsqs` magic and extracts only the `.desktop` file and `.DirIcon` with `unsquashfs -o <offset>`; the record is a real `.deb` built with `dpkg-deb` and installed with `dpkg -i`, so `dpkg -r` removes every file, icons included. Type 1 AppImages and other files are refused with an explanation. Done by `/usr/libexec/pkg-manager-gui/appimage_manager_backend` through `pkexec` (polkit action `br.com.aratie.appimagemanager.pkexec`, admin authentication).
 - Confirmation before installing or removing, progress parsed from the process output, result in a message box.
 - Interface, desktop entry and polkit policy in 33 languages.
 
@@ -39,7 +39,7 @@ download the `.deb` and `SHA256SUMS` from the
 
 ```bash
 sha256sum --check --ignore-missing SHA256SUMS
-sudo apt install ./pkg-manager-gui_1.1.0_all.deb
+sudo apt install ./pkg-manager-gui_1.1.1_all.deb
 ```
 
 ## Usage
@@ -60,7 +60,7 @@ sudo apt build-dep ./
 dpkg-buildpackage -us -uc -b
 ```
 
-The build runs `tests/test_logic.py`, `tests/test_i18n.py`,
+The build runs `tests/test_logic.py`, `tests/test_backend.py`, `tests/test_i18n.py`,
 `desktop-file-validate` and `xmllint`. CI ([`ci.yml`](.github/workflows/ci.yml))
 also runs `po/i18n.sh check-pot` and `po/i18n.sh validate`, lints the package,
 installs it in a clean Ubuntu 26.04 container and smoke-tests it. Releases are

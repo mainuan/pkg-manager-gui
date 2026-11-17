@@ -199,6 +199,7 @@ class ExtractTest(unittest.TestCase):
         cls.offset = build_appimage(cls.image, make_squashfs(tree, cls.tmp / "x.sqfs"))
         cls.backend = B.AppImageBackend()
         cls.dest = cls.backend._extract_metadata(cls.image, cls.offset, cls.tmp / "root")
+        cls.first_listing = sorted(os.listdir(cls.dest))
 
     @classmethod
     def tearDownClass(cls):
@@ -208,7 +209,7 @@ class ExtractTest(unittest.TestCase):
         return self.backend._read_from_image(self.image, self.offset, self.dest, name, limit)
 
     def test_only_desktop_files_are_extracted_first(self):
-        self.assertEqual(sorted(os.listdir(self.dest)), ["foo.desktop"])
+        self.assertEqual(self.first_listing, ["foo.desktop"])
         self.assertIn(b"Name=Foo App", self.read("foo.desktop"))
 
     def test_symlink_chain_inside_the_image(self):
@@ -413,10 +414,13 @@ class InstallTest(unittest.TestCase):
         def deb(*args):
             return subprocess.run(["dpkg-deb", *args, str(saved)], check=True,
                                   capture_output=True, text=True).stdout
-        self.assertEqual(deb("-f", "Package").strip(), "fooappimage")
-        self.assertEqual(deb("-f", "Version").strip(), f"1.0-{md5[:6]}")
-        self.assertEqual(deb("-f", "Architecture").strip(), "amd64")
-        self.assertEqual(deb("-f", "Description").splitlines()[0], "Foo App via AppImage")
+        def field(name):
+            return subprocess.run(["dpkg-deb", "-f", str(saved), name], check=True,
+                                  capture_output=True, text=True).stdout
+        self.assertEqual(field("Package").strip(), "fooappimage")
+        self.assertEqual(field("Version").strip(), f"1.0-{md5[:6]}")
+        self.assertEqual(field("Architecture").strip(), "amd64")
+        self.assertEqual(field("Description").splitlines()[0], "Foo App via AppImage")
         listing = deb("-c")
         for path in (f"./opt/appimages-installed/{md5}",
                      "./usr/share/applications/fooappimage.desktop",

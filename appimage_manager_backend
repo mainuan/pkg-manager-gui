@@ -240,7 +240,9 @@ class AppImageBackend:
             resource.setrlimit(resource.RLIMIT_FSIZE, (MAX_EXTRACTED_SIZE, MAX_EXTRACTED_SIZE))
         cmd = ["unsquashfs", "-no-progress", "-no-xattrs"]
         if not wildcards:
-            cmd.append("-no-wildcards")
+            # Extração sob demanda num dest que já existe (diretórios criados
+            # antes): -f, senão o unsquashfs se recusa a usá-los.
+            cmd += ["-no-wildcards", "-f"]
         cmd += ["-o", str(offset), "-d", str(dest), str(image), *names]
         return subprocess.run(cmd, capture_output=True, text=True, env=self._env(), timeout=120,
                               check=False, preexec_fn=limit_file_size)
@@ -260,10 +262,15 @@ class AppImageBackend:
         usr/share/icons/...). Links absolutos ou que saem da imagem: None."""
         path = name
         for _ in range(MAX_SYMLINK_HOPS):
+            parts = path.split("/")
+            # Nenhum diretório intermediário já extraído pode ser um link: o
+            # unsquashfs escreveria através dele.
+            if any((dest.joinpath(*parts[:i])).is_symlink() for i in range(1, len(parts))):
+                return None
             local = dest / path
             if not os.path.lexists(local):
-                self._unsquashfs(image, offset, dest, [path], wildcards=False)
-                if not os.path.lexists(local):
+                result = self._unsquashfs(image, offset, dest, [path], wildcards=False)
+                if result.returncode != 0 or not os.path.lexists(local):
                     return None
             if not local.is_symlink():
                 return read_inside(dest, path, limit)
